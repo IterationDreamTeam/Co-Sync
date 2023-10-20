@@ -3,40 +3,44 @@ import TextInput from './TextInput.jsx';
 import '../css/Login.scss';
 import Button from './Button.jsx';
 import { useNavigate, Link } from 'react-router-dom';
+import { useToast } from '@chakra-ui/react'
+
+
+
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [authenticated, setAuthenticated] = useState(false);
   const navigate = useNavigate();
+  const toast = useToast();
   useEffect(() => {
     if (authenticated) {
       navigate('/');
     }
   }, [authenticated]);
-  const handleSubmit = (e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const data = { username, password };
     setUsername('');
     setPassword('');
-    fetch('/api/user/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-      credentials: 'include',
-    }).then(res => {
-      if (res.status === 200) {
-        console.log('Login successful');
-        localStorage.setItem('isAuth', true);
-        setAuthenticated(true);
-      } else {
-        console.log('Login failed');
-      }
-    }).catch(err => {
-      console.log('Login failed with error: ', err);
-    });
-  };
+    try {
+      //  should return user object to be sent to redux state and token to store in local storage
+      await sendUserCreds(data).unwrap();
+      localStorage.setItem('isAuth', true);
+      setAuthenticated(true);
+      
+    } catch (err) {
+      // display error for user
+      toast({
+        title: 'Username or password is incorrect',
+        description: 'Username or password is incorrect',
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+    })
+    }
+  }
   return (
     <div className='outerContainer'>
       <div className="login container">
