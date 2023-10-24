@@ -5,14 +5,13 @@ import App from './App.jsx'
 import { store } from './utils/store.js';
 import './css/index.css';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { extendTheme, ChakraProvider } from '@chakra-ui/react'
+import { extendTheme, ChakraProvider, ColorModeScript } from '@chakra-ui/react'
 
 const config = {
   initialColorMode: 'dark',
   useSystemColorMode: 'false'
 }
 
-import { ChakraProvider,ColorModeScript, extendTheme} from '@chakra-ui/react';
 import theme from './theme.js'
 
 
@@ -31,7 +30,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <Provider store={store}>
       <Router>
         <ChakraProvider theme={theme}>
-          <ColorModeScript initialColorMode={theme.config.initialColorMode}/>
+          <ColorModeScript initialColorMode={theme.config.initialColorMode} />
           <App />
         </ChakraProvider>
       </Router>
