@@ -11,7 +11,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 export const userApi = createApi({
   reducerPath: 'userApi',
   baseQuery: fetchBaseQuery({ baseUrl: '/api' }),
-  tagTypes: ['Projects', 'User'],
+  tagTypes: ['Projects', 'User', 'Friends', 'Collaborators'],
   endpoints: (builder) => ({
     getProject: builder.query({
       query: () => ({ url: '/project/', method: 'GET' }),
@@ -24,6 +24,11 @@ export const userApi = createApi({
     sendUserCreds: builder.mutation({
       query: (body) => ({ url: '/user/login', method: 'POST', body, credentials: 'include' }),
       providesTags: ['User'],
+      invalidatesTags: ['Projects']
+    }),
+    logoutUser: builder.mutation({
+      query: () => ({ url: '/user/logout', method: 'GET', credentials: 'include' }),
+      invalidatesTags: ['User'],
     }),
     signupUser: builder.mutation({
       query: (body) => ({ url: '/user/signup', method: 'POST', body }),
@@ -48,10 +53,7 @@ export const userApi = createApi({
       invalidatesTags: ['Projects'],
     }),
     updateTask: builder.mutation({
-      query: (body) => ({
-        url: '/project/task',
-        method: 'PATCH', body
-      }),
+      query: (body) => ({ url: '/project/task', method: 'PATCH', body}),
       invalidatesTags: ['Projects'],
     }),
     deleteTask: builder.mutation({
@@ -66,13 +68,55 @@ export const userApi = createApi({
       query: ({ projectId }) => ({ url: `/project/${projectId}`, method: 'DELETE' }),
       invalidatesTags: ['Projects'],
     }),
+    getAllCollaborators: builder.query({
+      query: ({projectId}) => ({ url: `/collaboration/${projectId}`, method: 'GET', credentials: 'include' }),
+      providesTags: ['Collaborators'],
+    }),
     inviteUser: builder.mutation({
-      query: (body) => ({ url: '/user/invite', method: 'POST', body }),
-      invalidatesTags: ['Projects'],
+      query: (body) => ({ url: '/collaboration/add', method: 'POST', body }),
+      invalidatesTags: ['Collaborators'],
+    }),
+    getAllFriends: builder.query({
+      query: () => ({ url: '/friend-requests/all', method: 'GET', credentials: 'include' }),
+      providesTags: ['Friends'],
+    }),
+    sendFriendRequest: builder.mutation({
+      query: (body) => ({ url: '/friend-requests/sendRequest', method: 'POST', body, credentials: 'include' }),
+      invalidatesTags: ['Friends'],
+    }),
+    acceptFriendRequest: builder.mutation({
+      query: (body) => ({ url: '/friend-requests/accept', method: 'PATCH', body, credentials: 'include' }),
+      invalidatesTages:['Friends']
+    }),
+    removeFriend: builder.mutation({
+      query: (body) => ({ url: '/friend-requests/remove', method: 'DELETE', body, credentials: 'include' }),
+      invalidatesTags: ['Friends'],
     }),
   }),
 });
 
 // naming convention for exported functions can be written to your liking - we practiced adding 'Mutation' or 'Query' at the end of each endpoint function
 
-export const { useGetProjectQuery, useSendUserCredsMutation, useSignupUserMutation, useAddProjectMutation, useAddColumnMutation, useAddTaskMutation, useMoveTaskMutation, useUpdateTaskMutation, useDeleteTaskMutation, useDeleteColumnMutation, useDeleteProjectMutation, useGetUserProjectsQuery, useInviteUserMutation } = userApi;
+export const {
+  useGetProjectQuery,
+  useSendUserCredsMutation,
+  useSignupUserMutation,
+  useLogoutUserMutation,
+  useAddProjectMutation,
+  useAddColumnMutation,
+  useAddTaskMutation,
+  useMoveTaskMutation,
+  useUpdateTaskMutation,
+  useDeleteTaskMutation,
+  useDeleteColumnMutation,
+  useDeleteProjectMutation,
+  useGetUserProjectsQuery,
+  useGetAllCollaboratorsQuery, 
+  useInviteUserMutation,
+  useGetAllFriendsQuery,
+  useSendFriendRequestMutation,
+  useAcceptFriendRequestMutation,
+  useRejectFriendRequestMutation,
+  useRemoveFriendMutation,
+  abort
+} = userApi;
