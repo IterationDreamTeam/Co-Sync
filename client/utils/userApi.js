@@ -54,6 +54,14 @@ export const userApi = createApi({
       }),
       invalidatesTags: ['Projects'],
     }),
+    deleteComment: builder.mutation({
+      query: (body) => ({
+        url: '/project/task/comment',
+        method: 'DELETE', body
+      }),
+      invalidatesTags: ['Projects'],
+    }),
+
     deleteTask: builder.mutation({
       query: ({ projectId, columnId, taskId }) => ({ url: `/project/task/${projectId}/${columnId}/${taskId}`, method: 'DELETE', }),
       invalidatesTags: ['Projects'],

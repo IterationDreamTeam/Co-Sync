@@ -263,6 +263,10 @@ const updateTask = async (req, res, next) => {
   }
 };
 
+const deleteComment = async (req, res, next) => {
+  
+  return next();
+};
 
 // Delete a project (this will delete all column and tasks within the project)
 const deleteProject = async (req, res, next) => {
