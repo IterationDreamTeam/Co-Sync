@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import TaskButton from './TaskButton.jsx';
 import TextModal from './TextModal.jsx';
 import ColumnViewModal from './ColumnViewModal.jsx';
-import { useDeleteTaskMutation, useUpdateTaskMutation, useMoveTaskMutation } from '../utils/userApi.js';
+import { useDeleteTaskMutation, useUpdateTaskMutation, useMoveTaskMutation, useDeleteCommentMutation } from '../utils/userApi.js';
 import {
   Accordion,
   AccordionItem,
@@ -24,13 +24,14 @@ const TableTask = ({ task, column, currentProject, index }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isCommentOpen, setIsCommentOpen] = useState(false);
   const [isMoveOpen, setIsMoveOpen] = useState(false);
-  const [subtasks, setSubtasks] = useState(["Subdue Operations", "Extract Anomalies", "Field Adjacencies"])
+
 
 
   // must call mutations in a destructered array to then call later 
   const [deleteTaskMutation] = useDeleteTaskMutation();
   const [updateTaskMutation] = useUpdateTaskMutation();
   const [moveTaskMutation] = useMoveTaskMutation();
+  const [deleteCommentMutation] = useDeleteCommentMutation();
   const dispatch = useDispatch();
 
   const handleInputChange = (e) => {
@@ -94,22 +95,22 @@ const TableTask = ({ task, column, currentProject, index }) => {
 
   const handleDeleteComment = async (e) => {
     console.log(e)
-    // const body = {
-    //   projectId: currentProject._id,
-    //   columnId: column._id,
-    //   taskId: task._id,
-    //   taskName: task.taskName,
-    //   taskCommentID: e,
-    // };
-    // try {
-    //   const res = await deleteCommentMutation(body);
-    //   if (res.error) throw new Error(res.error.message);
-    //   dispatch(deleteTask({ updatedTask: res.data, columnId: column._id, taskID: taskCommentID }));
-    //   setIsCommentOpen(false);
-    //   console.log("Comment deleted")
-    // } catch (error) {
-    //   console.log(error);
-    // }
+    const body = {
+      projectId: currentProject._id,
+      columnId: column._id,
+      taskId: task._id,
+      taskName: task.taskName,
+      taskCommentID: e,
+    };
+    try {
+      const res = await deleteCommentMutation(body);
+      // if (res.error) throw new Error(res.error.message);
+      // dispatch(deleteTask({ updatedTask: res.data, columnId: column._id, taskID: taskCommentID }));
+      // setIsCommentOpen(false);
+      console.log("Comment deleted")
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   const handleMoveTask = async (e) => {

@@ -73,6 +73,19 @@ projectRouter.patch('/task',
   (req, res) => res.status(200).json(res.locals.task)
 );
 
+
+projectRouter.patch('/task/comment',
+  // sessionController.isLoggedIn,
+  projectController.deleteComment,
+  (req, res) => {
+    res.statusMessage = 'Project deleted';
+    res.status(200).end();
+  }
+);
+
+
+
+
 // delete a project
 // req.params.projectId: the projectId to delete;
 // returns a 200 status with a success message.
@@ -106,7 +119,7 @@ projectRouter.delete('/column/:projectId/:columnId',
 //   - taskId
 // returns a 200 status with a success message.
 projectRouter.delete('/task/:projectId/:columnId/:taskId',
-// sessionController.isLoggedIn,
+  // sessionController.isLoggedIn,
   projectController.deleteTask,
   (req, res) => {
     res.statusMessage = 'Task deleted';
