@@ -264,7 +264,7 @@ const updateTask = async (req, res, next) => {
 };
 
 const deleteComment = async (req, res, next) => {
-  console.log(req.body)
+  
   return next();
 };
 

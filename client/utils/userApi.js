@@ -54,7 +54,6 @@ export const userApi = createApi({
       }),
       invalidatesTags: ['Projects'],
     }),
-
     deleteComment: builder.mutation({
       query: (body) => ({
         url: '/project/task/comment',
@@ -84,4 +83,4 @@ export const userApi = createApi({
 
 // naming convention for exported functions can be written to your liking - we practiced adding 'Mutation' or 'Query' at the end of each endpoint function
 
-export const { useGetProjectQuery, useSendUserCredsMutation, useSignupUserMutation, useAddProjectMutation, useAddColumnMutation, useAddTaskMutation, useMoveTaskMutation, useUpdateTaskMutation, useDeleteCommentMutation, useDeleteTaskMutation, useDeleteColumnMutation, useDeleteProjectMutation, useGetUserProjectsQuery, useInviteUserMutation } = userApi;
+export const { useGetProjectQuery, useSendUserCredsMutation, useSignupUserMutation, useAddProjectMutation, useAddColumnMutation, useAddTaskMutation, useMoveTaskMutation, useUpdateTaskMutation, useDeleteTaskMutation, useDeleteColumnMutation, useDeleteProjectMutation, useGetUserProjectsQuery, useInviteUserMutation } = userApi;
