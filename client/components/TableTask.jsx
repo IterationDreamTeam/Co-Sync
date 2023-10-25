@@ -92,6 +92,26 @@ const TableTask = ({ task, column, currentProject, index }) => {
     }
   }
 
+  const handleDeleteComment = async (e) => {
+    console.log(e)
+    // const body = {
+    //   projectId: currentProject._id,
+    //   columnId: column._id,
+    //   taskId: task._id,
+    //   taskName: task.taskName,
+    //   taskCommentID: e,
+    // };
+    // try {
+    //   const res = await deleteCommentMutation(body);
+    //   if (res.error) throw new Error(res.error.message);
+    //   dispatch(deleteTask({ updatedTask: res.data, columnId: column._id, taskID: taskCommentID }));
+    //   setIsCommentOpen(false);
+    //   console.log("Comment deleted")
+    // } catch (error) {
+    //   console.log(error);
+    // }
+  }
+
   const handleMoveTask = async (e) => {
     e.preventDefault();
     console.log('new id is: ', e.target.value);
@@ -150,30 +170,22 @@ const TableTask = ({ task, column, currentProject, index }) => {
           </AccordionButton>
           <AccordionPanel pb={4}>
 
-            {Object.entries(task.taskComments).map(([key, value], i) =>
+            {Object.entries(task.taskComments).map(function ([key, value], i) {
+              let id = key
+              return (
+                <div className="commentBox">
+                  <div key={i}>
+                    {key} : {value}
+                  </div>
+                  <div className="buttonBox">
+                    <button className="commentButton"> Edit </button>
+                    {/* <button className="commentButton" onClick={() => this.handleDeleteComment()}> Delete </button> */}
+                    <button className="commentButton" onClick={() => handleDeleteComment(key)}> Delete </button>
+                  </div>
+                </div>
 
-              <div key={i}>
-                {key} : {value}
-              </div>
-
-            )}
-
-            {/* {task.taskComments !== '' &&
-              <>
-                {task.taskComments.map(function (data) {
-                  return (
-                    <div className="commentBox">
-                      <h6>
-                        Comment:  {data}
-                      </h6>
-                      <div className="buttonBox">
-                        <button className="commentButton"> Edit </button>
-                        <button className="commentButton"> Delete </button>
-                      </div>
-                    </div>
-                  )
-                })}
-              </>} */}
+              )
+            })}
           </AccordionPanel>
         </AccordionItem>
 
