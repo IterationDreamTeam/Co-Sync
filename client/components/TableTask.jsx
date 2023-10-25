@@ -20,7 +20,7 @@ import {
 const TableTask = ({ task, column, currentProject, index }) => {
   // had to set multiple states for different functionality but similiar purpose of state
   const [incomingData, setIncomingData] = useState('');
-  const [comment, setComment] = useState('');
+  const [comment, setComment] = useState({ 0: 5 });
   const [isOpen, setIsOpen] = useState(false);
   const [isCommentOpen, setIsCommentOpen] = useState(false);
   const [isMoveOpen, setIsMoveOpen] = useState(false);
@@ -86,6 +86,7 @@ const TableTask = ({ task, column, currentProject, index }) => {
       if (res.error) throw new Error(res.error.message);
       dispatch(updateTask({ updatedTask: res.data, columnId: column._id }));
       setIsCommentOpen(false);
+      console.log(task.taskComments)
     } catch (error) {
       console.log(error);
     }
@@ -148,7 +149,16 @@ const TableTask = ({ task, column, currentProject, index }) => {
             <AccordionIcon />
           </AccordionButton>
           <AccordionPanel pb={4}>
-            {task.taskComments !== '' &&
+
+            {Object.entries(task.taskComments).map(([key, value], i) =>
+
+              <div key={i}>
+                {key} : {value}
+              </div>
+
+            )}
+
+            {/* {task.taskComments !== '' &&
               <>
                 {task.taskComments.map(function (data) {
                   return (
@@ -163,7 +173,7 @@ const TableTask = ({ task, column, currentProject, index }) => {
                     </div>
                   )
                 })}
-              </>}
+              </>} */}
           </AccordionPanel>
         </AccordionItem>
 

@@ -245,21 +245,19 @@ const updateTask = async (req, res, next) => {
     }
     task.taskName = req.body.taskName;
 
-    console.log(task.taskComments)
     // each new comment adds new property to taskComments object
     let num = Object.keys(task.taskComments).length
     task.taskComments[num] = req.body.taskComments;
-
-    console.log(task.taskComments)
     await project.save();
 
     res.locals.task = task;
+    console.log(task)
     // res.locals.project = project;
     return next();
   } catch (error) {
     console.log(error);
     next({
-      log: 'Failed to udoate a task: ' + error,
+      log: 'Failed to update a task: ' + error,
       message: { err: 'Failed to updated a task' },
     })
   }
