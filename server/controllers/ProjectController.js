@@ -263,14 +263,6 @@ const updateTask = async (req, res, next) => {
   }
 };
 
-//Delete a Comment
-const deleteComment = async (req, res, next) => {
-  console.log(req.body)
-  res.locals.task = req.body
-  return next();
-};
-
-
 
 // Delete a project (this will delete all column and tasks within the project)
 const deleteProject = async (req, res, next) => {
@@ -410,7 +402,6 @@ module.exports = {
   changeColumn,
   createTask,
   updateTask,
-  deleteComment,
   deleteProject,
   deleteColumn,
   deleteTask,
