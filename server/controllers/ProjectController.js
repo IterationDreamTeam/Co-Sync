@@ -124,7 +124,7 @@ const changeColumn = async (req, res, next) => {
 
     for (let i = 0; i < project.columns.length; i++) {
       if (project.columns[i]._id.toString() === newColumnId) {
-        const newTask = { taskName: task.taskName, taskComments: task.taskComments, _id: task._id };
+        const newTask = { taskName: task.taskName, taskStatus: task.taskStatus, taskUrgency: task.taskUrgency,taskComments: task.taskComments, _id: task._id };
         project.columns[i].tasks.push(newTask);
         // newColumn = project.columns[i];
         break;
@@ -178,6 +178,8 @@ const createTask = async (req, res, next) => {
     }
     const newTask = {
       taskName: req.body.taskName,
+      taskStatus: '',
+      taskUrgency: '',
       taskComments: ''
     };
     column.tasks.push(newTask);
