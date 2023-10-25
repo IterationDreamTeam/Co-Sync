@@ -158,27 +158,48 @@
 }
 
 .commentBox {
-  border: 1px solid #cb2103 !important;
-  border-radius: 3px !important;
+  padding-top: 2px;
+  padding-bottom: 2px;
   display: flex;
+  margin: auto;
   flex-direction: row;
   width: 100%;
+  border-bottom: 1px solid #fff;
 }
 
 .buttonBox {
-  border: 1px solid #cb2103 !important;
   border-radius: 3px !important;
   display: flex;
   flex-direction: row;
+  margin-top: auto;
+  margin-bottom: auto;
   margin-left: auto !important;
   margin-right: 0 !important;
 }
 
 .commentButton {
-  border: 1px solid #cb2103 !important;
-  border-radius: 3px !important;
-  color: #fff !important;
-  // margin-left: auto;
-  // margin-right: 0;
-  // display: inline-block;
+  position: relative;
+  cursor: pointer;
+  font-size: 1rem;
+  border: 0px transparent;
+  border-radius: 5px;
+  background-color: #6fcdff00;
+  height: 1.5rem;
+  width: 1rem;
+  min-width: fit-content;
+  color: $cyan-text;
+  background-size: cover;
+  transition: all 0.2s ease-in-out;
+  margin: 5px 0px;
+  display: inline-block;
+  text-wrap: nowrap;
+  word-wrap: break-word;
+  white-space: nowrap;
+  padding-left: 5px;
+  padding-right: 2px;
+
+  &:hover {
+    scale: 1.1;
+    background-color: rgba(255, 255, 255, 0.1);
+  }
 }

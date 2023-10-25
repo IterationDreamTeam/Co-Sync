@@ -73,6 +73,11 @@ projectRouter.patch('/task',
   (req, res) => res.status(200).json(res.locals.task)
 );
 
+projectRouter.patch('/task/editcomment',
+  // sessionController.isLoggedIn,
+  projectController.editComment,
+  (req, res) => res.status(200).json(res.locals.task)
+);
 
 projectRouter.patch('/task/comment',
   // sessionController.isLoggedIn,

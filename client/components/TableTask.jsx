@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import TaskButton from './TaskButton.jsx';
 import TextModal from './TextModal.jsx';
 import ColumnViewModal from './ColumnViewModal.jsx';
-import { useDeleteTaskMutation, useUpdateTaskMutation, useMoveTaskMutation, useDeleteCommentMutation } from '../utils/userApi.js';
+import { useDeleteTaskMutation, useUpdateTaskMutation, useMoveTaskMutation, useDeleteCommentMutation, useEditCommentMutation } from '../utils/userApi.js';
 import {
   Accordion,
   AccordionItem,
@@ -20,7 +20,7 @@ import {
 const TableTask = ({ task, column, currentProject, index }) => {
   // had to set multiple states for different functionality but similiar purpose of state
   const [incomingData, setIncomingData] = useState('');
-  const [comment, setComment] = useState({ 0: 5 });
+  const [comment, setComment] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [isCommentOpen, setIsCommentOpen] = useState(false);
   const [isMoveOpen, setIsMoveOpen] = useState(false);
@@ -31,6 +31,7 @@ const TableTask = ({ task, column, currentProject, index }) => {
   const [deleteTaskMutation] = useDeleteTaskMutation();
   const [updateTaskMutation] = useUpdateTaskMutation();
   const [moveTaskMutation] = useMoveTaskMutation();
+  const [editCommentMutation] = useEditCommentMutation();
   const [deleteCommentMutation] = useDeleteCommentMutation();
   const dispatch = useDispatch();
 
@@ -93,6 +94,27 @@ const TableTask = ({ task, column, currentProject, index }) => {
     }
   }
 
+  const handleEditComment = async (e) => {
+    console.log(e)
+    const body = {
+      projectId: currentProject._id,
+      columnId: column._id,
+      taskId: task._id,
+      taskName: task.taskName,
+      taskComments: comment,
+      taskCommentID: e,
+    };
+    try {
+      const res = await editCommentMutation(body);
+      if (res.error) throw new Error(res.error.message);
+      dispatch(updateTask({ updatedTask: res.data, columnId: column._id }));
+      setIsCommentOpen(false);
+
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   const handleDeleteComment = async (e) => {
     console.log(e)
     const body = {
@@ -104,10 +126,10 @@ const TableTask = ({ task, column, currentProject, index }) => {
     };
     try {
       const res = await deleteCommentMutation(body);
-      // if (res.error) throw new Error(res.error.message);
-      // dispatch(deleteTask({ updatedTask: res.data, columnId: column._id, taskID: taskCommentID }));
-      // setIsCommentOpen(false);
-      console.log("Comment deleted")
+      if (res.error) throw new Error(res.error.message);
+      dispatch(updateTask({ updatedTask: res.data, columnId: column._id }));
+      setIsCommentOpen(false);
+
     } catch (error) {
       console.log(error);
     }
@@ -171,16 +193,14 @@ const TableTask = ({ task, column, currentProject, index }) => {
           </AccordionButton>
           <AccordionPanel pb={4}>
 
-            {Object.entries(task.taskComments).map(function ([key, value], i) {
-              let id = key
+            {Object.entries(task.taskComments).filter((value) => !"").map(function ([key, value], i) {
               return (
                 <div className="commentBox">
-                  <div key={i}>
+                  <p>
                     {key} : {value}
-                  </div>
+                  </p>
                   <div className="buttonBox">
-                    <button className="commentButton"> Edit </button>
-                    {/* <button className="commentButton" onClick={() => this.handleDeleteComment()}> Delete </button> */}
+                    <button className="commentButton" onClick={() => handleEditComment(key)}> Edit </button>
                     <button className="commentButton" onClick={() => handleDeleteComment(key)}> Delete </button>
                   </div>
                 </div>
