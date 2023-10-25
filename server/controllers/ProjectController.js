@@ -265,7 +265,45 @@ const updateTask = async (req, res, next) => {
 
 const deleteComment = async (req, res, next) => {
   console.log(req.body)
-  return next();
+
+  try {
+    const project = await Project.findOne({
+      _id: req.body.projectId
+    });
+
+    let column;
+    for (let i = 0; i < project.columns.length; i++) {
+      if (project.columns[i]._id.toString() === req.body.columnId) {
+        column = project.columns[i];
+        break;
+      }
+    }
+
+    let task;
+    for (let i = 0; i < column.tasks.length; i++) {
+      if (column.tasks[i]._id.toString() === req.body.taskId) {
+        task = column.tasks[i];
+        break;
+      }
+    }
+
+    task.taskName = req.body.taskName;
+    let index = req.body.taskCommentID
+    task.taskComments.splice(index, 1)
+
+    await project.save();
+    console.log('made it this far')
+    res.locals.task = task;
+    console.log(task)
+    return next();
+
+  } catch (error) {
+    console.log(error);
+    next({
+      log: 'Failed to delete comment: ' + error,
+      message: { err: 'Failed to delete a comment' },
+    })
+  }
 };
 
 // Delete a project (this will delete all column and tasks within the project)

@@ -77,10 +77,7 @@ projectRouter.patch('/task',
 projectRouter.patch('/task/comment',
   // sessionController.isLoggedIn,
   projectController.deleteComment,
-  (req, res) => {
-    res.statusMessage = 'Project deleted';
-    res.status(200).end();
-  }
+  (req, res) => res.status(200).json(res.locals.task)
 );
 
 

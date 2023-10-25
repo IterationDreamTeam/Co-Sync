@@ -57,7 +57,7 @@ export const userApi = createApi({
     deleteComment: builder.mutation({
       query: (body) => ({
         url: '/project/task/comment',
-        method: 'DELETE', body
+        method: 'PATCH', body
       }),
       invalidatesTags: ['Projects'],
     }),
