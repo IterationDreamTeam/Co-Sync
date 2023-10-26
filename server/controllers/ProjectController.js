@@ -177,7 +177,7 @@ const createTask = async (req, res, next) => {
     }
     const newTask = {
       taskName: req.body.taskName,
-      taskComments: ''
+      taskComments: []
     };
     column.tasks.push(newTask);
     const updatedProject = await project.save();
@@ -247,6 +247,7 @@ const updateTask = async (req, res, next) => {
 
     // each new comment adds new property to taskComments object
     let num = Object.keys(task.taskComments).length
+
     task.taskComments[num] = req.body.taskComments;
     await project.save();
 

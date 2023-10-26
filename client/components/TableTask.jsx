@@ -130,7 +130,7 @@ const TableTask = ({ task, column, currentProject, index }) => {
   }
 
   const handleDeleteComment = async (e) => {
-    console.log(e)
+
     const body = {
       projectId: currentProject._id,
       columnId: column._id,
@@ -212,10 +212,11 @@ const TableTask = ({ task, column, currentProject, index }) => {
           <AccordionPanel pb={4}>
 
             {Object.entries(task.taskComments).filter((value) => !"").map(function ([key, value], i) {
+              let number = parseInt(key) + 1
               return (
                 <div className="commentBox">
                   <p>
-                    {key} : {value}
+                    {number} : {value}
                   </p>
                   <div className="buttonBox">
                     <button className="commentButton" onClick={() => handleInputCommentEdit(key)}> Edit </button>
