@@ -20,7 +20,7 @@ const ProjectsViewModal = ({ setIsOpen, title, saveFunc }) => {
             }} 
             className='closeModalButton'>x</button>
         </div>
-        <div className='projectsList'>          
+        <div className='projectsList'>      
           {projectsList.map((project, index) => {
             return <button value={project} onClick={(e) => {
               e.preventDefault();

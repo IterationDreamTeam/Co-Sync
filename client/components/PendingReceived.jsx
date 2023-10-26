@@ -6,11 +6,10 @@ import { useAcceptFriendRequestMutation, useRemoveFriendMutation } from '../util
  * It differs from the Pending sent component in that it has both an accept and reject button.
  */
 
-const PendingReceived = ({ refetch, senderId, receiverId, senderUsername }) => {
+const PendingReceived = ({ senderId, receiverId, senderUsername }) => {
   // ! Refactor this component to use the username instead of the id
   // receiverId is the current user's id
   // senderId is the id of the user who sent the friend request
-  
   
   const [acceptFriendRequest] = useAcceptFriendRequestMutation();
   const [removeFriend] = useRemoveFriendMutation();
@@ -19,8 +18,7 @@ const PendingReceived = ({ refetch, senderId, receiverId, senderUsername }) => {
     try {
       console.log('handleAcceptance')
       // replace senderId with senderUsername
-      const res = await acceptFriendRequest({ receiverId, senderId }).unwrap();
-      refetch();
+      await acceptFriendRequest({ receiverId, senderId }).unwrap();
     } catch (error) {
       console.log(error);
     }
@@ -30,8 +28,7 @@ const PendingReceived = ({ refetch, senderId, receiverId, senderUsername }) => {
     try {
       console.log('handleRejection');
       // replace senderId with senderUsername
-      const res = await removeFriend({ senderId, receiverId }).unwrap();
-      refetch();
+      await removeFriend({ senderId, receiverId }).unwrap();
     } catch (error) {
       console.log(error);
     }

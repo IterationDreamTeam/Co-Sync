@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import ScrollBarItem from './ScrollBarItem.jsx';
 import { useDispatch } from 'react-redux';
+import { Box , HStack, } from '@chakra-ui/react';
 import { useAddColumnMutation, useAddProjectMutation, useInviteUserMutation } from '../utils/userApi.js';
 import { createColumn, createProject, setCurrentProjectName } from '../slices/userSlice.js';
 
@@ -72,8 +73,19 @@ const ScrollBar = ({ currentProject }) => {
     }
   }
   return (
-    <div className='scrollBarOuter'>
-      <ul className='scrollBarInner'>
+    <Box
+      
+      bg='Interstellar.PalePink'
+      rounded='md'
+      // boxShadow='md'
+      width='95%'
+      mt='.5rem'
+      ml='3rem'
+      mr='3rem'
+    >
+      <HStack className='scrollBarInner'
+        justify='center'
+      >
         <ScrollBarItem
           setterFunction={setInvite}
           saveFunc={handleInviteUser}
@@ -89,20 +101,21 @@ const ScrollBar = ({ currentProject }) => {
           title='Column Name'
         />
         <ScrollBarItem
-          placeholder='Create Project'
+          placeholder='Create'
           type='text'
           title='Project Name'
           setterFunction={setProject}
           saveFunc={handleSetProject}
         />
         <ScrollBarItem
-          placeholder='My Projects'
+          placeholder='Projects'
           type='view'
           title='Projects'
           saveFunc={handleSetProjectName}
         />
-      </ul>
-    </div>
+      </HStack>
+    </Box>
+    
   )
 }
 

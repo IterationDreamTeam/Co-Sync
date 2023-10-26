@@ -1,3 +1,4 @@
+import {current } from '@reduxjs/toolkit';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 // RTK query is a data fetching and caching tool -- eliminates the need to hand-write data fetching and cachce logic yourself
@@ -53,7 +54,7 @@ export const userApi = createApi({
       invalidatesTags: ['Projects'],
     }),
     updateTask: builder.mutation({
-      query: (body) => ({ url: '/project/task', method: 'PATCH', body}),
+      query: (body) => ({ url: '/project/task', method: 'PATCH', body }),
       invalidatesTags: ['Projects'],
     }),
     deleteTask: builder.mutation({
@@ -69,7 +70,7 @@ export const userApi = createApi({
       invalidatesTags: ['Projects'],
     }),
     getAllCollaborators: builder.query({
-      query: ({projectId}) => ({ url: `/collaboration/${projectId}`, method: 'GET', credentials: 'include' }),
+      query: ({ projectId }) => ({ url: `/collaboration/${projectId}`, method: 'GET', credentials: 'include' }),
       providesTags: ['Collaborators'],
     }),
     inviteUser: builder.mutation({
@@ -86,21 +87,54 @@ export const userApi = createApi({
     }),
     acceptFriendRequest: builder.mutation({
       query: (body) => ({ url: '/friend-requests/accept', method: 'PATCH', body, credentials: 'include' }),
-      invalidatesTages:['Friends']
+      invalidatesTages: ['Friends']
     }),
     removeFriend: builder.mutation({
       query: (body) => ({ url: '/friend-requests/remove', method: 'DELETE', body, credentials: 'include' }),
       invalidatesTags: ['Friends'],
     }),
     getNotifications: builder.query({
-      query: () => ({ url: '/notification',  method: 'GET', credentials: 'include' }),
+      query: () => ({ url: '/notification', method: 'GET', credentials: 'include' }),
       providesTags: ['Notifications'],
     }),
+    markAsRead: builder.mutation({
+      query: ({ id, patch }) => ({ url: `/notification/${id}/read`, method: 'PATCH', body: patch, credentials: 'include' }),
+      async onQueryStarted({ id, patch }, { dispatch, queryFulfilled }) {
+        console.log('markAsRead onQueryStarted')
+        const patchResult = dispatch(userApi.util.updateQueryData('getNotifications', { skip: false }, (draft) => {
+          draft.find((notif) => notif._id === id).isRead = patch.isRead;
+        })
+        );
+        try {
+          console.log('inside try')
+          await queryFulfilled
+        } catch {
+          console.log('inside catch')
+          patchResult.undo();
+        }
+      }
+    }),
+    markAllAsRead: builder.mutation({
+      query: (body) => ({ url: '/notification/readAll', method: 'PATCH', body,  credentials: 'include' }),
+      async onQueryStarted({ ids, patch }, { dispatch, queryFulfilled }) { 
+        console.log('markAllAsRead onQueryStarted')
+        const patchResult = dispatch(userApi.util.updateQueryData('getNotifications', { skip: false }, (draft) => {
+          console.log(ids);
+          ids.forEach((id) => draft.find((notif) => notif._id === id).isRead = patch.isRead);
+        }));
+        try {
+          console.log('inside try')
+          await queryFulfilled
+        } catch {
+          console.log('inside catch')
+          patchResult.undo();
+        }
+      }
+    })
   }),
 });
 
 // naming convention for exported functions can be written to your liking - we practiced adding 'Mutation' or 'Query' at the end of each endpoint function
-
 export const {
   useGetProjectQuery,
   useSendUserCredsMutation,
@@ -115,7 +149,7 @@ export const {
   useDeleteColumnMutation,
   useDeleteProjectMutation,
   useGetUserProjectsQuery,
-  useGetAllCollaboratorsQuery, 
+  useGetAllCollaboratorsQuery,
   useInviteUserMutation,
   useGetAllFriendsQuery,
   useSendFriendRequestMutation,
@@ -123,4 +157,6 @@ export const {
   useRejectFriendRequestMutation,
   useRemoveFriendMutation,
   useGetNotificationsQuery,
+  useMarkAsReadMutation, 
+  useMarkAllAsReadMutation,
 } = userApi;

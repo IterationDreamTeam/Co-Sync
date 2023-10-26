@@ -5,7 +5,7 @@ import '../css/Home.scss';
 import '../css/Modal.scss'
 import { useDispatch, } from 'react-redux';
 import { setUserState } from '../slices/userSlice.js';
-import { useGetUserProjectsQuery, useGetNotificationsQuery } from '../utils/userApi.js';
+import { useGetUserProjectsQuery } from '../utils/userApi.js';
 /*
   This is the main component for the home page. It renders the NavBar and TableDisplay components.
   It also checks for authentication and redirects to the login page if the user is not authenticated.

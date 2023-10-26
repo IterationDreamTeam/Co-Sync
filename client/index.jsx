@@ -5,13 +5,9 @@ import App from './App.jsx'
 import { store } from './utils/store.js';
 import './css/index.css';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { extendTheme, ChakraProvider,ColorModeScript} from '@chakra-ui/react';
-// import theme from './theme.js'
-import { popoverTheme } from './Popover.js';
-
-export const theme = extendTheme({
-  components: { Popover: popoverTheme },
-})
+import { ChakraProvider,ColorModeScript} from '@chakra-ui/react';
+import theme from './theme.js'
+// import { popoverTheme  from './popoverTheme.js';
 
 if (module.hot) module.hot.accept();
 ReactDOM.createRoot(document.getElementById('root')).render(

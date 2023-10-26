@@ -1,0 +1,209 @@
+@mixin size($w, $h) 
+	width: $w
+	height: $h
+
+@mixin mask-box($w, $h)
+	width: $w
+	height: $h
+	overflow: hidden
+	display: flex
+	justify-content: center
+	align-items: flex-start
+
+@mixin flex-center()
+	display: flex
+	justify-content: center
+	align-items: center
+
+@mixin center()
+	position: absolute
+	left: 50%
+	top: 50%
+	transform-origin: center
+	transform: translateX(-50%) translateY(-50%)
+
+@mixin abs_pos($x, $y)
+	position: absolute
+	left: 50%
+	top: 50%
+	transform: translateX($x) translateY($y)
+
+@mixin blur-color($size, $color)
+	background-color: $color
+	filter: blur($size)
+	border-radius: 100%
+	
+
+body, html
+	+size(100%, 100%)
+	position: relative
+	margin: 0
+	background-color: #0A0603
+	//cursor: none
+
+.l1
+	+center
+	+size(200px, 200px)
+	+blur-color(100px, #A52502)
+
+.l1-1
+	+size(40px, 80px)
+	+blur-color(30px, #550700)
+	+abs_pos(-150px, -115px)
+
+.l1-2
+	+size(40px, 60px)
+	+blur-color(20px, #550700)
+	+abs_pos(-100px, -100px)
+
+.l1-3
+	+size(80px, 80px)
+	+blur-color(20px, #550700)
+	+abs_pos(-120px, -30px)
+	-webkit-animation: toLeft 3s infinite alternate
+.l1-4
+	+size(80px, 80px)
+	+blur-color(20px, #550700)
+	+abs_pos(60px, 30px)
+	-webkit-animation: rotateAroundAni 5s infinite alternate
+
+.l2
+	+center
+	+size(160px, 160px)
+	+blur-color(30px, #AE2F03)
+.l3
+	+center
+	+size(150px, 150px)
+	+blur-color(20px, #FADD69)
+	
+.l4
+	+center
+	+size(50px, 60px)
+	+blur-color(15px, #480A06)
+	
+.l5
+	+center
+	+size(30px, 40px)
+	+blur-color(5px, #000)
+	transform: translateX(-50%) translateY(-50%) rotate(20deg)
+
+.l5-1
+	+size(100px, 100px)
+	+blur-color(30px, #550700)
+	+abs_pos(-100px, -60px)
+.l5-2
+	+size(100px, 100px)
+	+blur-color(30px, #550700)
+	+abs_pos(-60px, -95px)
+.l5-3
+	+size(100px, 100px)
+	+blur-color(30px, #550700)
+	+abs_pos(0px, -60px)
+
+.l12
+	+size(60px, 60px)
+	+blur-color(20px, #E22)
+	+abs_pos(-100px, 10px)
+
+.l13
+	+size(60px, 60px)
+	+blur-color(20px, #E22)
+	+abs_pos(-20px, 40px)
+
+.l6
+	+center
+	+size(80px, 80px)
+	border: #FFED9E 15px solid
+	filter: blur(10px)
+	border-radius: 100%
+
+.l7
+	+center
+	+size(90px, 90px)
+	border: #FDF0AB 15px solid
+	filter: blur(8px)
+	border-radius: 100%
+
+.l8
+	+size(60px, 60px)
+	+abs_pos(-80px, -10px)
+	+blur-color(30px, #FFE833)
+	
+.l8-00
+	+size(60px, 60px)
+	+abs_pos(30px, -10px)
+	+blur-color(30px, #FFE833)
+	
+.l8-01
+	+size(60px, 60px)
+	+abs_pos(0px, 20px)
+	+blur-color(30px, #FFE833)
+	
+.l8-1
+	+size(30px, 50px)
+	+abs_pos(-60px, -10px)
+	+blur-color(10px, #FFF)
+	
+.l8-2
+	+size(30px, 50px)
+	+abs_pos(30px, -10px)
+	+blur-color(10px, #FFF)
+.l8-3
+	+size(50px, 30px)
+	+abs_pos(0px, 30px)
+	+blur-color(15px, #FFF)
+
+
+.l9
+	+size(30px, 60px)
+	+abs_pos(-70px, -10px)
+	+blur-color(18px, #FFE833)
+
+.l10
+	+center
+	+size(50px, 70px)
+	+blur-color(10px, #521003)
+	transform: translateX(-50%) translateY(-50%) rotate(20deg)
+
+.l11
+	+center
+	+size(50px, 70px)
+	+blur-color(10px, #220003)
+	transform: translateX(-50%) translateY(-50%) rotate(20deg)
+
+.rotateAni
+	-webkit-animation: rotateAni 2s infinite alternate linear
+
+.text
+	+center
+	color: white
+	font-size: 24px
+	transform: translateX(-50%) translateY(-180px)
+
+@-webkit-keyframes rotateAni
+	from
+		width: 30px
+		height: 40px
+		transform: translateX(-50%) translateY(-50%) rotate(20deg)
+	to
+		width: 40px
+		height: 50px
+		transform: translateX(-50%) translateY(-50%) rotate(40deg)
+
+@-webkit-keyframes rotateRoundAni
+	from
+		transform: translateX(-50%) translateY(-50%) rotate(0deg)
+	to
+		transform: translateX(-50%) translateY(-50%) rotate(360deg)
+
+@-webkit-keyframes toLeft
+	from
+		transform: translateX(-120px) translateY(-30px)
+	to
+		transform: translateX(-160px) translateY(30px)
+
+.blackhole
+	+center
+	-webkit-animation: rotateRoundAni 30s infinite linear
+// +abs_pos(-120px, -30px)
+// 	-webkit-animation: toLeft 3s infinite alternate

@@ -1,21 +1,25 @@
 import React from 'react'
-import { Avatar, AvatarBadge, Box, Flex, VStack, Text} from '@chakra-ui/react'
+import { Avatar, AvatarBadge, Box, Button, Flex, Text, VStack} from '@chakra-ui/react'
+import getTimeDifference from '../utils/getTime.js'
 
+const Notification = ({ notification, NotifOnClick, message, createdAt, hasBadge, colorMode }) => {
 
-const Notification = ({ message, createdAt, hasBadge, colorMode, ...rest }) => {
+  const displayTime = getTimeDifference(createdAt)
 
   return (
     <Box
-      bg={
-        hasBadge
-          ? colorMode === 'light'
-            ? 'gray.100'
-            : 'gray.700'
-          : 'transparent'
-      }
-      {...rest}
+      // bg={
+      //   hasBadge
+      //     ? colorMode === 'light'
+      //       ? 'gray.100'
+      //       : 'gray.700'
+      //     : 'transparent'
+      // }
+      bg='white'
     >
-      <Flex gap={3} p={2}>
+      <Flex gap={3} p={2}
+        justifyContent='space-between'
+      >
         <Box>
           <Avatar size='sm' name={name} src='src' >
             {hasBadge && (
@@ -30,17 +34,20 @@ const Notification = ({ message, createdAt, hasBadge, colorMode, ...rest }) => {
         </Box>
         <VStack>
           <Box> 
-            <Text fontSize={'sm'}>
-              {/* <b>{name}</b> {action} */}
+            <Text fontSize={'sm'} color='black'>
               {message}
             </Text>
           </Box>
+          <Box alignSelf={'flex-start'} mt='0 !important'>
+            <Text fontSize={'xs'} fontWeight='lighter' color='#154367'>
+              {displayTime}
+            </Text>
+          </Box>
         </VStack>
-        <Box alignSelf={'flex-start'} mt='0 !important'>
-          <Text fontSize={'xs'} fontweight='lighter'>
-            {createdAt}
-          </Text>
-        </Box>
+        <Button
+          color='red'
+          onClick={() => NotifOnClick({ id: notification._id, patch: { isRead: !notification.isRead } })}
+        >{notification.isRead ? 'Unread' : 'Read'}</Button>
       </Flex>
     </Box>
   )

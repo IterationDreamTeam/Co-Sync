@@ -1,9 +1,8 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import {SettingsIcon} from '@chakra-ui/icons';
-import { Box, StackDivider, Button, Flex, Popover, PopoverCloseButton, PopoverBody, PopoverContent, PopoverArrow, PopoverHeader, Text, PopoverTrigger, VStack } from '@chakra-ui/react';
+import { Box, StackDivider, Flex, Popover, PopoverContent, PopoverArrow, PopoverHeader, Text, PopoverTrigger, VStack } from '@chakra-ui/react';
 import { Link, useNavigate } from 'react-router-dom';
-import Notification from './Notification.jsx';
 import { resetState } from '../slices/userSlice.js';
 import { userApi, useLogoutUserMutation } from '../utils/userApi.js';
 
@@ -11,12 +10,11 @@ const ProfilePopover = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [logout] = useLogoutUserMutation();
-  const isAuth = localStorage.getItem('isAuth');
 
-  const handleLogout = async (e) => {
+  const handleLogout = async () => {
     try {
       localStorage.removeItem('isAuth');
-      const res = await logout().unwrap();
+      await logout().unwrap();
       console.log('Logout successful');
       userApi.util.resetApiState(undefined);
       dispatch(resetState(undefined));
@@ -27,7 +25,7 @@ const ProfilePopover = () => {
   }
   return (
     <Box
-    display='inline-block'
+      display='inline-block'
     >
       <Popover>
         <PopoverTrigger>

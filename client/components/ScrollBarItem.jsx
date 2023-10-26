@@ -3,6 +3,7 @@ import Button from './Button.jsx';
 import TextModal from './TextModal.jsx';
 import ProjectsViewModal from './ProjectsViewModal.jsx';
 import FriendsList from './FriendsList.jsx';
+import {Box} from '@chakra-ui/react'
 
 /*
   This component renders the individual buttons in the scroll bar, the type can be,
@@ -15,7 +16,7 @@ import FriendsList from './FriendsList.jsx';
 const ScrollBarItem = ({ setterFunction, saveFunc, placeholder, type, title }) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
-    <li className='scrollBarListItem'>
+    <Box className='scrollBarListItem'>
       <Button saveFunc={() => setIsOpen(!isOpen)} text={placeholder} type='button'/>
       {isOpen && type === 'text' ?
         <TextModal placeholder={placeholder} setterFunction={setterFunction} saveFunc={saveFunc} setIsOpen={setIsOpen} title={title} /> :
@@ -24,7 +25,7 @@ const ScrollBarItem = ({ setterFunction, saveFunc, placeholder, type, title }) =
           isOpen && type === 'friends' ?
             <FriendsList setIsOpen={setIsOpen} title={title} saveFunc={saveFunc} setterFunction={setterFunction} /> :
             null}
-    </li>
+    </Box>
   )
 }
 

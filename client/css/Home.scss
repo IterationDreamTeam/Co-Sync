@@ -3,10 +3,11 @@
 .container {
   height: fit-content;
   width: fit-content;
-  backdrop-filter: blur(10px);
-  background-color: $semi-transparent;
+  // backdrop-filter: blur(10px);
+  // background-color: $semi-transparent;
   border: 1px solid white;
   border-radius: 10px;
+  -webkit-animation:  none !important;
 }
 
 .homeMain {
@@ -20,10 +21,13 @@
   padding: 0;
   border: none;
   overflow: auto;
+  -webkit-animation:  none !important;
 }
 
 // the NavBar is the top bar with the logo and the buttons
 .NavBar {
+  // * Blur
+  // backdrop-filter: blur(10px);
   // ? Without z-index NavBar 'sinks' below the TableDispay
   z-index: 2;
   // ? Changed display from grid to flex
@@ -37,11 +41,11 @@
   align-items: center;
   position: relative;
   padding: 0rem 1rem;
-  backdrop-filter: blur(10px);
+  color: white;
   background-color: rgba(255, 255, 255, 0.01);
-  border-bottom: 1px solid rgb(255, 255, 255);
+  border-bottom: 0.1px solid rgb(255, 255, 255);
   // * sizing 
-  height: 20vh;
+  height: 2rem;
   width: 100%;
   font-size: 3vh;
   // * animation 
@@ -52,11 +56,20 @@
 
   ul {
     display: flex;
+    justify-content: space-between;
     margin: 0;
     height: fit-content;
     width: fit-content;
     padding: 0;
     list-style: none; 
+    
+    li {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem; 
+      padding: 0;
+    }
     // .routerLink {
     //   display: flex;
     //   align-items: center;
@@ -192,6 +205,7 @@
 
 .scrollBarOuter {
   position: relative;
+  background: white;
 }
 
 .scrollBarListItem {
@@ -203,16 +217,18 @@
 }
 
 .scrollBarOuter {
-  background-color: $glass-blue;
+margin: 1rem 1rem;
+border-radius: 1rem;
+  // background-color: $glass-blue;
   display: flex;
   position: relative;
   align-items: center;
   justify-content: center;
-  width: 100%;
+  width: 90%;
   border-bottom: 1px solid white;
   height: 8vh;
   font-size: 3vh;
-  padding: 0px 10px;
+  padding: 0px 0px;
 }
 
 .TaskButton {
@@ -255,7 +271,8 @@
     font-size: 15px;
     height: 1.5rem;
     width: fit-content;
-    color: rgb(44, 210, 222);
+    // color: rgb(44, 210, 222);
+    color: white;
     background-size: cover;
     transition: all 0.2s ease-in-out;
 

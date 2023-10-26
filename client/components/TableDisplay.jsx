@@ -23,6 +23,7 @@ const TableDisplay = () => {
   return (
     <div id='tableDisplayOuter' className='container'>
       <ScrollBar currentProject={currentProject} />
+
       <TableHeader {...currentProject} />
       <div id='tableDisplayInner'>
         {currentProject.columns.map((column, index) => {
