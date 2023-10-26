@@ -29,7 +29,7 @@ const TableTask = ({ task, column, currentProject, index }) => {
   const [isCommentOpen, setIsCommentOpen] = useState(false);
   const [isCommentEdit, setIsCommentEdit] = useState(false);
   const [isMoveOpen, setIsMoveOpen] = useState(false);
-
+  const [commentID, setCommentID] = useState('')
 
 
   // must call mutations in a destructered array to then call later 
@@ -47,6 +47,8 @@ const TableTask = ({ task, column, currentProject, index }) => {
 
   const handleInputCommentEdit = (e) => {
     // setComment(e)
+    setCommentID(e);
+    console.log(`comment ID is ${e}`)
     setIsCommentEdit(prev => !prev);
   };
 
@@ -113,12 +115,11 @@ const TableTask = ({ task, column, currentProject, index }) => {
       taskId: task._id,
       taskName: task.taskName,
       taskNewComment: newComment,
-      taskCommentID: e,
+      taskCommentID: commentID,
     };
     try {
       const res = await editCommentMutation(body);
-      console.log(res)
-      console.log(res.data)
+
       if (res.error) throw new Error(res.error.message);
       dispatch(updateTask({ updatedTask: res.data, columnId: column._id }));
       setIsCommentOpen(false);

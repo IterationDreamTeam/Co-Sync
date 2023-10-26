@@ -290,12 +290,14 @@ const editComment = async (req, res, next) => {
 
     task.taskName = req.body.taskName;
     let index = req.body.taskCommentID
-    task.taskComments[index] = task.comment
+    let comment = req.body.taskNewComment
+    // console.log(`Changing array element at index ${index} to ${comment}`)
+    task.taskComments[index] = comment
 
     await project.save();
 
     res.locals.task = task;
-    console.log(task)
+    // console.log(task)
     return next();
 
   } catch (error) {
