@@ -264,6 +264,7 @@ const updateTask = async (req, res, next) => {
 };
 
 const editComment = async (req, res, next) => {
+  console.log("Begin Edit Comment script")
   console.log(req.body)
 
   try {
@@ -289,10 +290,10 @@ const editComment = async (req, res, next) => {
 
     task.taskName = req.body.taskName;
     let index = req.body.taskCommentID
-    task.taskComments.splice(index, 1)
+    task.taskComments[index] = task.comment
 
     await project.save();
-    console.log('made it this far')
+
     res.locals.task = task;
     console.log(task)
     return next();

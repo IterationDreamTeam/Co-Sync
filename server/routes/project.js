@@ -67,20 +67,18 @@ projectRouter.post('/task',
 //   - taskName
 //   - taskComments
 // returns a json object of the created task.
+
 projectRouter.patch('/task',
-  // sessionController.isLoggedIn,
   projectController.updateTask,
   (req, res) => res.status(200).json(res.locals.task)
 );
 
 projectRouter.patch('/task/editcomment',
-  // sessionController.isLoggedIn,
   projectController.editComment,
   (req, res) => res.status(200).json(res.locals.task)
 );
 
-projectRouter.patch('/task/comment',
-  // sessionController.isLoggedIn,
+projectRouter.patch('/task/deletecomment',
   projectController.deleteComment,
   (req, res) => res.status(200).json(res.locals.task)
 );

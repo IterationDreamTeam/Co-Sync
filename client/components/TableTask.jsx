@@ -11,6 +11,10 @@ import {
   AccordionButton,
   AccordionPanel,
   AccordionIcon,
+  Editable,
+  EditableInput,
+  EditableTextarea,
+  EditablePreview,
 } from '@chakra-ui/react'
 /*
   This component renders the individual tasks in the table columns.
@@ -23,6 +27,7 @@ const TableTask = ({ task, column, currentProject, index }) => {
   const [comment, setComment] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [isCommentOpen, setIsCommentOpen] = useState(false);
+  const [isCommentEdit, setIsCommentEdit] = useState(false);
   const [isMoveOpen, setIsMoveOpen] = useState(false);
 
 
@@ -38,6 +43,11 @@ const TableTask = ({ task, column, currentProject, index }) => {
   const handleInputChange = (e) => {
     e.preventDefault();
     setIsOpen(prev => !prev);
+  };
+
+  const handleInputCommentEdit = (e) => {
+    // setComment(e)
+    setIsCommentEdit(prev => !prev);
   };
 
   const handleInputCommentChange = (e) => {
@@ -95,17 +105,20 @@ const TableTask = ({ task, column, currentProject, index }) => {
   }
 
   const handleEditComment = async (e) => {
-    console.log(e)
+    let newComment = comment
+    console.log(newComment)
     const body = {
       projectId: currentProject._id,
       columnId: column._id,
       taskId: task._id,
       taskName: task.taskName,
-      taskComments: comment,
+      taskNewComment: newComment,
       taskCommentID: e,
     };
     try {
       const res = await editCommentMutation(body);
+      console.log(res)
+      console.log(res.data)
       if (res.error) throw new Error(res.error.message);
       dispatch(updateTask({ updatedTask: res.data, columnId: column._id }));
       setIsCommentOpen(false);
@@ -185,6 +198,10 @@ const TableTask = ({ task, column, currentProject, index }) => {
   return (
 
     <div style={{ zIndex: -index }} className="container" id="tableTaskMain">{ /* zIndex is used to make sure the task buttons are always on top of the task and the tasks below in the list */}
+      {/* <Editable defaultValue='Test edit box'>
+        <EditablePreview />
+        <EditableTextarea />
+      </Editable> */}
       <Accordion allowToggle>
         <AccordionItem>
           <AccordionButton>
@@ -200,11 +217,10 @@ const TableTask = ({ task, column, currentProject, index }) => {
                     {key} : {value}
                   </p>
                   <div className="buttonBox">
-                    <button className="commentButton" onClick={() => handleEditComment(key)}> Edit </button>
+                    <button className="commentButton" onClick={() => handleInputCommentEdit(key)}> Edit </button>
                     <button className="commentButton" onClick={() => handleDeleteComment(key)}> Delete </button>
                   </div>
                 </div>
-
               )
             })}
           </AccordionPanel>
@@ -250,6 +266,13 @@ const TableTask = ({ task, column, currentProject, index }) => {
             saveFunc={(e) => handleAddComment(e)}
             setIsOpen={setIsCommentOpen}
             title='Add Comment'
+          /> : null}
+          {isCommentEdit ? <TextModal
+            placeholder={'Edit Comment'}
+            setterFunction={setComment}
+            saveFunc={(e) => handleEditComment(e)}
+            setIsOpen={setIsCommentEdit}
+            title='Edit Comment'
           /> : null}
         </div>
       </Accordion>
