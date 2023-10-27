@@ -485,68 +485,7 @@ const deleteTask = async (req, res, next) => {
   }
 };
 
-const getTaskCreatedAt = async (req, res, next) => {
-  try {
-    const projectId = req.params.projectId;
-    const columnId = req.params.columnId;
-    const taskId = req.params.taskId;
 
-    const project = await Project.findOne({
-      _id: projectId
-    });
-    if (!project) {
-      return next({
-        status: 404,
-        log: 'project does not exist. ',
-        message: { err: 'project does not exist.' },
-      });
-    }
-    // find column by id;
-    let column;
-    let columnIndex;
-    for (let i = 0; i < project.columns.length; i++) {
-      if (project.columns[i]._id.toString() === columnId) {
-        column = project.columns[i];
-        columnIndex = i;
-        break;
-      }
-    }
-    if (!column) {
-      return next({
-        status: 404,
-        log: 'column does not exist. ',
-        message: { err: 'column does not exist.' },
-      });
-    }
-
-    let taskIndex;
-    for (let i = 0; i < column.tasks.length; i++) {
-      if (column.tasks[i]._id.toString() === taskId) {
-        taskIndex = i;
-        break;
-      }
-    }
-    if (taskIndex === undefined) {
-      return next({
-        status: 404,
-        log: 'task does not exist. ',
-        message: { err: 'task does not exist.' },
-      });
-    }
-    const timestamp = column.tasks[taskIndex].createdAt;
-    const date = new Date(timestamp);
-    const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZoneName: 'short' };
-    
-    res.locals.createdAt = date.toLocaleDateString('en-US', options);
-    next();
-  } catch (error) {
-    console.log(error);
-    next({
-    log: 'Failed to get task createdAt: ' + error,
-    message: { err: 'Failed to get task createdAt' },
-    })
-  }
-}
 
 module.exports = {
   getProjects,
@@ -559,6 +498,5 @@ module.exports = {
   deleteComment,
   deleteProject,
   deleteColumn,
-  deleteTask,
-  getTaskCreatedAt
+  deleteTask
 };

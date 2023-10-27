@@ -11,10 +11,13 @@ import {
   AccordionButton,
   AccordionPanel,
   AccordionIcon,
+  Box, //
+  Collapse, //
   Editable,
   EditableInput,
   EditableTextarea,
   EditablePreview,
+  Text //
 } from '@chakra-ui/react'
 /*
   This component renders the individual tasks in the table columns.
@@ -31,6 +34,7 @@ const TableTask = ({ task, column, currentProject, index }) => {
   const [isMoveOpen, setIsMoveOpen] = useState(false);
   const [commentID, setCommentID] = useState('')
 
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false); // !LK
 
   // must call mutations in a destructered array to then call later 
   const [deleteTaskMutation] = useDeleteTaskMutation();
@@ -39,6 +43,17 @@ const TableTask = ({ task, column, currentProject, index }) => {
   const [editCommentMutation] = useEditCommentMutation();
   const [deleteCommentMutation] = useDeleteCommentMutation();
   const dispatch = useDispatch();
+
+  const originalDate = new Date(task.createdAt);
+  const deadlineDate = new Date(originalDate);
+  deadlineDate.setDate(deadlineDate.getDate() + 5);
+
+  // !LK
+  const handleDetailsButtonClick = () => {
+    setIsDetailsOpen(!isDetailsOpen);
+  };
+
+
 
   const handleInputChange = (e) => {
     e.preventDefault();
@@ -106,7 +121,7 @@ const TableTask = ({ task, column, currentProject, index }) => {
     }
   }
 
-  const handleEditComment = async (e) => {
+  const handleEditComment = async () => {
     let newComment = comment
     console.log(newComment)
     const body = {
@@ -249,6 +264,12 @@ const TableTask = ({ task, column, currentProject, index }) => {
             text='Move'
             idOverride='innerTaskButton'
           />
+          <TaskButton
+            onClick={() => { handleDetailsButtonClick()}}
+            text='Details'
+            idOverride='innerTaskButton'
+          />
+          
           {isOpen ? <TextModal
             placeholder={'Task Name'}
             setterFunction={setIncomingData}
@@ -277,7 +298,21 @@ const TableTask = ({ task, column, currentProject, index }) => {
             title='Edit Comment'
           /> : null}
         </div>
-      </Accordion>
+       
+      </Accordion> 
+        <Collapse in={isDetailsOpen}>
+            <Box
+              p={2}
+              mt={2}
+              borderWidth="1px"
+              borderRadius="md"
+              boxShadow="md"
+              backgroundColor="#152330"
+            > 
+              <Text>Created: {originalDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZoneName: 'short' })}</Text>
+              <Text>Deadline: {deadlineDate ? deadlineDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZoneName: 'short' }) : 'None'}</Text>
+            </Box>
+          </Collapse>
     </div>
 
   );
