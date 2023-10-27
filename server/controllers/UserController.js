@@ -147,6 +147,11 @@ userController.verifyUser = async (req, res, next) => {
             });
             if(result === true) {
               console.log('Bcrypt compare confirmed');
+              res.locals.user = {
+                _id: user._id,
+                username: user.username,
+              }
+              console.log('Hi I am the User...', user)
               res.locals.verifyUser = true;
               return next()
             }
@@ -166,7 +171,7 @@ userController.getUserProjects = (req, res, next) => {
   User.findOne({_id: userID})
     .populate('projects')
     .then((user) => {
-      res.locals.user = {projects: user.projects, username: user.username};
+      res.locals.user = {projects: user.projects, username: user.username, userId: user._id};
       return next();
     })
     .catch((err) => {

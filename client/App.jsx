@@ -10,7 +10,6 @@ import { useDispatch } from 'react-redux';
 import { setUserState } from './slices/userSlice.js';
 import { useGetUserProjectsQuery } from './utils/userApi.js';
 import './css/index.css';
-import ToggleColorMode from './components/ToggleColorMode.jsx';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -28,6 +27,7 @@ const App = () => {
           projects,
           numOfProjects: userData.projects.length,
           username: userData.username,
+          userId: userData.userId,
         };
         dispatch(setUserState(transformedData));
       }
@@ -35,9 +35,6 @@ const App = () => {
   });
   return (
     <div>
-      <div id='toggleButton'>      
-        <ToggleColorMode/>
-      </div>
       <div className="App">
         <Routes>
           <Route

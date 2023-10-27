@@ -4,8 +4,12 @@
 */
 
 @font-face {
-  font-family: JetBrainsMono-Regular;
-  src: url(https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/fonts/ttf/JetBrainsMono-Regular.ttf);
+  /* font-family: JetBrainsMono-Regular;
+  src: url(https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/fonts/ttf/JetBrainsMono-Regular.ttf); */
+  font-family: 'Objectiv';
+  src: url('./fonts/Objectiv/Objectiv-Regular.ttf') format('truetype');
+  font-weight: 400; 
+  font-style:normal;
 }
 
 @keyframes slideInFromTop {
@@ -24,7 +28,7 @@ html {
   margin: 0;
   padding: 0;
   /* background: radial-gradient(ellipse at bottom, #1B2735 0%, transparent), radial-gradient(ellipse at top, #090A0F 100%, transparent); */
-  background-image: url(https://images.pexels.com/photos/176851/pexels-photo-176851.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2);
+  /* background-image: url(https://images.pexels.com/photos/176851/pexels-photo-176851.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2) !important; */
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
@@ -37,9 +41,9 @@ html {
 
 * {
   box-sizing: border-box;
-  font-family: JetBrainsMono-Regular;
+  font-family: 'Objectiv';
   color: white;
-  text-shadow: 0rem 0rem 0.35rem rgba(255, 255, 255, 0.5);
+  /* text-shadow: 0rem 0rem 0.35rem rgba(255, 255, 255, 0.5); */
   scrollbar-color: #2ee3ffae #1B2735;
   scrollbar-width: auto;
   scroll-behavior: smooth;
@@ -47,6 +51,7 @@ html {
 }
 
 body {
+  
   margin: 0;
   padding: 0;
   background: url(https://images.pexels.com/photos/176851/pexels-photo-176851.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2) !important;
@@ -54,7 +59,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-image: url(https://images.pexels.com/photos/176851/pexels-photo-176851.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2) !important;
 }
-
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import NavBar from './NavBar.jsx';
 import '../css/Profile.scss';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import ScrollBarItem from './ScrollBarItem.jsx';
-
+import { useSendFriendRequestMutation} from '../utils/userApi.js';
 /*
   W.I.P.
   This component renders the profile page which displays the users stats and basic info.
@@ -11,18 +11,20 @@ import ScrollBarItem from './ScrollBarItem.jsx';
 */
 
 const Profile = () => {
-  /**
-   * TODO:
-   * 1. Add friend request functionality
-   * 2. Add friend list functionality
-  */ //test
-  const dispatch = useDispatch();
+  const { numOfProjects, username, userId:senderId } = useSelector(state => state.user);
+
+  const [sendFriendRequest] = useSendFriendRequestMutation();
   const [friend, setFriend] = useState('');
-  const handleFriendRequest = (e) => {
-    e.preventDefault();
-    console.log(`friend: ${friend}`);
+  const handleFriendRequest = async () => {
+    try {
+      const res = await sendFriendRequest({ friend, senderId, username }).unwrap();
+      console.log(res)
+      setFriend('');
+      
+    } catch (err) {
+      console.log(err.data);
+    }
   }
-  const { numOfProjects, username } = useSelector(state => state.user);
   return (
     <div className="homeMain container">
       <NavBar />

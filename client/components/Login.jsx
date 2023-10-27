@@ -4,7 +4,8 @@ import '../css/Login.scss';
 import Button from './Button.jsx';
 import { useSendUserCredsMutation } from '../utils/userApi.js';
 import { useNavigate, Link } from 'react-router-dom';
-import {useToast} from '@chakra-ui/react';
+import { useToast } from '@chakra-ui/react'
+
 const Login = () => {
   const [sendUserCreds] = useSendUserCredsMutation();
   const [username, setUsername] = useState('');
@@ -12,7 +13,7 @@ const Login = () => {
   const [authenticated, setAuthenticated] = useState(false);
   const navigate = useNavigate();
   const toast = useToast();
- 
+
   useEffect(() => {
     if (authenticated) {
       navigate('/');
