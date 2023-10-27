@@ -114,4 +114,17 @@ projectRouter.delete('/task/:projectId/:columnId/:taskId',
   }
 );
 
+
+// update a task priority
+// req.body: a JSON object with the following fields:
+//   - projectId
+//   - columnId
+//   - taskId
+//   - taskPriority
+// returns a 200 status with a success message.
+projectRouter.patch('/task/priority',
+  projectController.updateTaskPriority,
+  (req, res) => res.status(200).json({ updatedPriority: res.locals.updatedPriority })
+);
+
 module.exports = projectRouter;

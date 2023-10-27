@@ -96,6 +96,14 @@ export const userApi = createApi({
       query: () => ({ url: '/notification',  method: 'GET', credentials: 'include' }),
       providesTags: ['Notifications'],
     }),
+    editTaskPriority: builder.mutation({
+      query: (body) => ({
+        url: '/project/task/priority', 
+        method: 'PATCH', 
+        body, 
+      }),
+      invalidatesTags: ['Projects'], 
+    }),
   }),
 });
 
@@ -123,4 +131,5 @@ export const {
   useRejectFriendRequestMutation,
   useRemoveFriendMutation,
   useGetNotificationsQuery,
+  useEditTaskPriorityMutation,
 } = userApi;

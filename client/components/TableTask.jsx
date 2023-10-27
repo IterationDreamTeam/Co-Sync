@@ -4,7 +4,8 @@ import { useDispatch } from 'react-redux';
 import TaskButton from './TaskButton.jsx';
 import TextModal from './TextModal.jsx';
 import ColumnViewModal from './ColumnViewModal.jsx';
-import { useDeleteTaskMutation, useUpdateTaskMutation, useMoveTaskMutation } from '../utils/userApi.js';
+import EditTaskViewModal from './EditTaskViewModal.jsx';
+import { useDeleteTaskMutation, useUpdateTaskMutation, useMoveTaskMutation, useEditTaskPriorityMutation } from '../utils/userApi.js';
 import {
   Accordion,
   AccordionItem,
@@ -12,7 +13,7 @@ import {
   AccordionPanel,
   AccordionIcon,
 } from '@chakra-ui/react'
-/*
+/* 
   This component renders the individual tasks in the table columns.
   It also renders the TaskButton, TextModal, and ColumnViewModal components.
 */
@@ -21,16 +22,20 @@ const TableTask = ({ task, column, currentProject, index }) => {
   // had to set multiple states for different functionality but similiar purpose of state
   const [incomingData, setIncomingData] = useState('');
   const [comment, setComment] = useState('');
+  const [priority, setPriority] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const [isCommentOpen, setIsCommentOpen] = useState(false);
   const [isMoveOpen, setIsMoveOpen] = useState(false);
   const [subtasks, setSubtasks] = useState(["Subdue Operations", "Extract Anomalies", "Field Adjacencies"])
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedOption,setSelectedOption] = useState('');
 
 
   // must call mutations in a destructered array to then call later 
   const [deleteTaskMutation] = useDeleteTaskMutation();
   const [updateTaskMutation] = useUpdateTaskMutation();
   const [moveTaskMutation] = useMoveTaskMutation();
+  const [editTaskPriority] = useEditTaskPriorityMutation();
   const dispatch = useDispatch();
 
   const handleInputChange = (e) => {
@@ -50,7 +55,6 @@ const TableTask = ({ task, column, currentProject, index }) => {
       columnId: column._id,
       taskId: task._id,
       taskName: incomingData,
-      taskComments: task.taskComments,
     };
     try {
       const res = await updateTaskMutation(body);
@@ -134,6 +138,32 @@ const TableTask = ({ task, column, currentProject, index }) => {
     }
   };
 
+  const handlePriorityChange = async (e) => {
+    console.log("tesing priority")
+    // console.log(e)
+
+    console.log('e',e.target.value);
+    console.log('type', typeof e.target.value);
+    // setPriority(parseInt(e.target.value));
+    console.log('priority', priority)
+
+    const body = {
+      projectId: currentProject._id,
+      columnId: column._id,
+      taskId: task._id,
+      taskPriority: incomingData,
+    };
+
+    console.log(body)
+    try {
+      const res = await editTaskPriority(body);
+      if (res.error) throw new Error(res.error.message);
+      dispatch(updateTask({ updatedPriority: res.data, columnId: column._id }));
+      setIsMoveOpen(false);
+    } catch (error) {
+      console.log(error);
+};
+}
   // in the return rendering statement, we have multiple conditional statements to render the modals specified to their action
   // the taskbuttons corresponds with their textmodal for some functionality 
   // each of the textmodals parameters is passed down from textmodal.jsx and passed in their action created in this component 
@@ -188,6 +218,7 @@ const TableTask = ({ task, column, currentProject, index }) => {
             text='Move'
             idOverride='innerTaskButton'
           />
+          <button onClick={() => setIsEditModalOpen(true)}>Edit Task</button>
           {isOpen ? <TextModal
             placeholder={'Task Name'}
             setterFunction={setIncomingData}
@@ -208,6 +239,13 @@ const TableTask = ({ task, column, currentProject, index }) => {
             setIsOpen={setIsCommentOpen}
             title='Add Comment'
           /> : null}
+          {isEditModalOpen ? <EditTaskViewModal
+          placeholder={'Edit Priority'}
+          setterFunction={setPriority}
+          saveFunc={(e) => handlePriorityChange(e)}
+          setIsEditModalOpen={setIsEditModalOpen}
+          title='Edit Priortiy'
+        /> : null}
         </div>
       </Accordion>
     </div>
