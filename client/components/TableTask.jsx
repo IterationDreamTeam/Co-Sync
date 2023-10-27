@@ -12,12 +12,25 @@ import {
   AccordionPanel,
   AccordionIcon,
 } from '@chakra-ui/react'
+
+// Drag and Drop
+import { useDraggable } from '@dnd-kit/core';
+
 /*
   This component renders the individual tasks in the table columns.
   It also renders the TaskButton, TextModal, and ColumnViewModal components.
 */
 
 const TableTask = ({ task, column, currentProject, index }) => {
+  // Drag and Drop hooks
+  const { attributes, listeners, setNodeRef, transform, transition } = useDraggable({
+    id: task._id,
+  })
+
+  const style = transform ? {
+    transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
+  } : undefined;
+
   // had to set multiple states for different functionality but similiar purpose of state
   const [incomingData, setIncomingData] = useState('');
   const [comment, setComment] = useState('');
@@ -140,7 +153,7 @@ const TableTask = ({ task, column, currentProject, index }) => {
 
   return (
 
-    <div style={{ zIndex: -index }} className="container" id="tableTaskMain">{ /* zIndex is used to make sure the task buttons are always on top of the task and the tasks below in the list */}
+    <div style={{ zIndex: -index, ...style }} className="container" id="tableTaskMain" ref={setNodeRef} {...listeners} {...attributes}>{ /* zIndex is used to make sure the task buttons are always on top of the task and the tasks below in the list */}
       <Accordion allowToggle>
         <AccordionItem>
           <AccordionButton>
