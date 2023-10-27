@@ -53,7 +53,24 @@ export const userApi = createApi({
       invalidatesTags: ['Projects'],
     }),
     updateTask: builder.mutation({
-      query: (body) => ({ url: '/project/task', method: 'PATCH', body}),
+      query: (body) => ({
+        url: '/project/task',
+        method: 'PATCH', body
+      }),
+      invalidatesTags: ['Projects'],
+    }),
+    editComment: builder.mutation({
+      query: (body) => ({
+        url: '/project/task/editcomment',
+        method: 'PATCH', body
+      }),
+      invalidatesTags: ['Projects'],
+    }),
+    deleteComment: builder.mutation({
+      query: (body) => ({
+        url: '/project/task/deletecomment',
+        method: 'PATCH', body
+      }),
       invalidatesTags: ['Projects'],
     }),
     deleteTask: builder.mutation({
@@ -119,6 +136,8 @@ export const {
   useAddTaskMutation,
   useMoveTaskMutation,
   useUpdateTaskMutation,
+  useEditCommentMutation, 
+  useDeleteCommentMutation, 
   useDeleteTaskMutation,
   useDeleteColumnMutation,
   useDeleteProjectMutation,

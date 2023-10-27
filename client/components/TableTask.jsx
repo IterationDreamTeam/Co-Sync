@@ -5,13 +5,17 @@ import TaskButton from './TaskButton.jsx';
 import TextModal from './TextModal.jsx';
 import ColumnViewModal from './ColumnViewModal.jsx';
 import EditTaskViewModal from './EditTaskViewModal.jsx';
-import { useDeleteTaskMutation, useUpdateTaskMutation, useMoveTaskMutation, useEditTaskPriorityMutation } from '../utils/userApi.js';
+import { useDeleteTaskMutation, useUpdateTaskMutation, useMoveTaskMutation, useEditTaskPriorityMutation, useDeleteCommentMutation, useEditCommentMutation } from '../utils/userApi.js';
 import {
   Accordion,
   AccordionItem,
   AccordionButton,
   AccordionPanel,
   AccordionIcon,
+  Editable,
+  EditableInput,
+  EditableTextarea,
+  EditablePreview,
 } from '@chakra-ui/react'
 /* 
   This component renders the individual tasks in the table columns.
@@ -21,12 +25,13 @@ import {
 const TableTask = ({ task, column, currentProject, index }) => {
   // had to set multiple states for different functionality but similiar purpose of state
   const [incomingData, setIncomingData] = useState('');
-  const [comment, setComment] = useState('');
+  const [comment, setComment] = useState(false);
   const [priority, setPriority] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const [isCommentOpen, setIsCommentOpen] = useState(false);
+  const [isCommentEdit, setIsCommentEdit] = useState(false);
   const [isMoveOpen, setIsMoveOpen] = useState(false);
-  const [subtasks, setSubtasks] = useState(["Subdue Operations", "Extract Anomalies", "Field Adjacencies"])
+  const [commentID, setCommentID] = useState('')
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedOption,setSelectedOption] = useState('');
 
@@ -36,11 +41,20 @@ const TableTask = ({ task, column, currentProject, index }) => {
   const [updateTaskMutation] = useUpdateTaskMutation();
   const [moveTaskMutation] = useMoveTaskMutation();
   const [editTaskPriority] = useEditTaskPriorityMutation();
+  const [editCommentMutation] = useEditCommentMutation();
+  const [deleteCommentMutation] = useDeleteCommentMutation();
   const dispatch = useDispatch();
 
   const handleInputChange = (e) => {
     e.preventDefault();
     setIsOpen(prev => !prev);
+  };
+
+  const handleInputCommentEdit = (e) => {
+    // setComment(e)
+    setCommentID(e);
+    console.log(`comment ID is ${e}`)
+    setIsCommentEdit(prev => !prev);
   };
 
   const handleInputCommentChange = (e) => {
@@ -90,6 +104,50 @@ const TableTask = ({ task, column, currentProject, index }) => {
       if (res.error) throw new Error(res.error.message);
       dispatch(updateTask({ updatedTask: res.data, columnId: column._id }));
       setIsCommentOpen(false);
+      console.log(task.taskComments)
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const handleEditComment = async (e) => {
+    let newComment = comment
+    console.log(newComment)
+    const body = {
+      projectId: currentProject._id,
+      columnId: column._id,
+      taskId: task._id,
+      taskName: task.taskName,
+      taskNewComment: newComment,
+      taskCommentID: commentID,
+    };
+    try {
+      const res = await editCommentMutation(body);
+
+      if (res.error) throw new Error(res.error.message);
+      dispatch(updateTask({ updatedTask: res.data, columnId: column._id }));
+      setIsCommentOpen(false);
+
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const handleDeleteComment = async (e) => {
+
+    const body = {
+      projectId: currentProject._id,
+      columnId: column._id,
+      taskId: task._id,
+      taskName: task.taskName,
+      taskCommentID: e,
+    };
+    try {
+      const res = await deleteCommentMutation(body);
+      if (res.error) throw new Error(res.error.message);
+      dispatch(updateTask({ updatedTask: res.data, columnId: column._id }));
+      setIsCommentOpen(false);
+
     } catch (error) {
       console.log(error);
     }
@@ -171,6 +229,10 @@ const TableTask = ({ task, column, currentProject, index }) => {
   return (
 
     <div style={{ zIndex: -index }} className="container" id="tableTaskMain">{ /* zIndex is used to make sure the task buttons are always on top of the task and the tasks below in the list */}
+      {/* <Editable defaultValue='Test edit box'>
+        <EditablePreview />
+        <EditableTextarea />
+      </Editable> */}
       <Accordion allowToggle>
         <AccordionItem>
           <AccordionButton>
@@ -178,22 +240,21 @@ const TableTask = ({ task, column, currentProject, index }) => {
             <AccordionIcon />
           </AccordionButton>
           <AccordionPanel pb={4}>
-            {task.taskComments !== '' &&
-              <>
-                {task.taskComments.map(function (data) {
-                  return (
-                    <div className="commentBox">
-                      <h6>
-                        Comment:  {data}
-                      </h6>
-                      <div className="buttonBox">
-                        <button className="commentButton"> Edit </button>
-                        <button className="commentButton"> Delete </button>
-                      </div>
-                    </div>
-                  )
-                })}
-              </>}
+
+            {Object.entries(task.taskComments).filter((value) => !"").map(function ([key, value], i) {
+              let number = parseInt(key) + 1
+              return (
+                <div className="commentBox">
+                  <p>
+                    {number} : {value}
+                  </p>
+                  <div className="buttonBox">
+                    <button className="commentButton" onClick={() => handleInputCommentEdit(key)}> Edit </button>
+                    <button className="commentButton" onClick={() => handleDeleteComment(key)}> Delete </button>
+                  </div>
+                </div>
+              )
+            })}
           </AccordionPanel>
         </AccordionItem>
 
@@ -246,6 +307,13 @@ const TableTask = ({ task, column, currentProject, index }) => {
           setIsEditModalOpen={setIsEditModalOpen}
           title='Edit Priortiy'
         /> : null}
+          {isCommentEdit ? <TextModal
+            placeholder={'Edit Comment'}
+            setterFunction={setComment}
+            saveFunc={(e) => handleEditComment(e)}
+            setIsOpen={setIsCommentEdit}
+            title='Edit Comment'
+          /> : null}
         </div>
       </Accordion>
     </div>

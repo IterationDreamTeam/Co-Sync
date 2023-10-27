@@ -180,7 +180,7 @@ const createTask = async (req, res, next) => {
       taskName: req.body.taskName,
       taskStatus: '',
       taskPriority: 0,
-      taskComments: ''
+      taskComments: []
     };
     column.tasks.push(newTask);
     const updatedProject = await project.save();
@@ -248,21 +248,20 @@ const updateTask = async (req, res, next) => {
     }
     task.taskName = req.body.taskName;
 
-    console.log(task.taskComments)
     // each new comment adds new property to taskComments object
     let num = Object.keys(task.taskComments).length
-    task.taskComments[num] = req.body.taskComments;
 
-    console.log(task.taskComments)
+    task.taskComments[num] = req.body.taskComments;
     await project.save();
 
     res.locals.task = task;
+    console.log(task)
     // res.locals.project = project;
     return next();
   } catch (error) {
     console.log(error);
     next({
-      log: 'Failed to udoate a task: ' + error,
+      log: 'Failed to update a task: ' + error,
       message: { err: 'Failed to updated a task' },
     })
   }
@@ -329,6 +328,94 @@ const updateTaskPriority = async (req, res, next) => {
     })
   }
 
+};
+const editComment = async (req, res, next) => {
+  console.log("Begin Edit Comment script")
+  console.log(req.body)
+
+  try {
+    const project = await Project.findOne({
+      _id: req.body.projectId
+    });
+
+    let column;
+    for (let i = 0; i < project.columns.length; i++) {
+      if (project.columns[i]._id.toString() === req.body.columnId) {
+        column = project.columns[i];
+        break;
+      }
+    }
+
+    let task;
+    for (let i = 0; i < column.tasks.length; i++) {
+      if (column.tasks[i]._id.toString() === req.body.taskId) {
+        task = column.tasks[i];
+        break;
+      }
+    }
+
+    task.taskName = req.body.taskName;
+    let index = req.body.taskCommentID
+    let comment = req.body.taskNewComment
+    // console.log(`Changing array element at index ${index} to ${comment}`)
+    task.taskComments[index] = comment
+
+    await project.save();
+
+    res.locals.task = task;
+    // console.log(task)
+    return next();
+
+  } catch (error) {
+    console.log(error);
+    next({
+      log: 'Failed to delete comment: ' + error,
+      message: { err: 'Failed to delete a comment' },
+    })
+  }
+};
+
+const deleteComment = async (req, res, next) => {
+  console.log(req.body)
+
+  try {
+    const project = await Project.findOne({
+      _id: req.body.projectId
+    });
+
+    let column;
+    for (let i = 0; i < project.columns.length; i++) {
+      if (project.columns[i]._id.toString() === req.body.columnId) {
+        column = project.columns[i];
+        break;
+      }
+    }
+
+    let task;
+    for (let i = 0; i < column.tasks.length; i++) {
+      if (column.tasks[i]._id.toString() === req.body.taskId) {
+        task = column.tasks[i];
+        break;
+      }
+    }
+
+    task.taskName = req.body.taskName;
+    let index = req.body.taskCommentID
+    task.taskComments.splice(index, 1)
+
+    await project.save();
+    console.log('made it this far')
+    res.locals.task = task;
+    console.log(task)
+    return next();
+
+  } catch (error) {
+    console.log(error);
+    next({
+      log: 'Failed to delete comment: ' + error,
+      message: { err: 'Failed to delete a comment' },
+    })
+  }
 };
 
 // Delete a project (this will delete all column and tasks within the project)
@@ -470,6 +557,8 @@ module.exports = {
   createTask,
   updateTask,
   updateTaskPriority,
+  editComment,
+  deleteComment,
   deleteProject,
   deleteColumn,
   deleteTask,
