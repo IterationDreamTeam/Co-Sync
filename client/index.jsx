@@ -15,14 +15,14 @@ export const theme = extendTheme({
 
 if (module.hot) module.hot.accept();
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <Router>
-        <ChakraProvider theme={theme}>
-          <ColorModeScript initialColorMode={theme.config.initialColorMode}/>
-          <App />
-        </ChakraProvider>
-      </Router>
-    </Provider>
-  </React.StrictMode>
+
+  <Provider store={store}>
+    <Router>
+      <ChakraProvider theme={theme}>
+        <ColorModeScript initialColorMode={theme.config.initialColorMode} />
+        <App />
+      </ChakraProvider>
+    </Router>
+  </Provider>
+
 );
