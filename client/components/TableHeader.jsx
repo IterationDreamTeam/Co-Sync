@@ -1,5 +1,5 @@
 import React from 'react';
-import {Box, Flex} from '@chakra-ui/react'
+import {Box, Flex, HStack} from '@chakra-ui/react'
 import { useGetAllCollaboratorsQuery } from '../utils/userApi';
 
 const TableHeader = ({ projectName, _id:projectId }) => {
@@ -9,28 +9,49 @@ const TableHeader = ({ projectName, _id:projectId }) => {
 
   return (
     <Flex
+      bg='Interstellar.PalePink'
       justifyContent='center'
-      
+      alignContent='center'
+      alignItems='center'
+      p={2}
+      rounded='sm'
       width='95vw'
       color='black'
-      bg='white'
       mt={2}
     >  
       <Box
-      display='inline-block'
-      >{projectName}</Box>
+        bg='white'
+        p={2}
+        rounded='sm'
+        display='inline-block'
+
+      >{projectName}
+      </Box>
       <Flex
-      marginLeft='auto'
-      display='inline-block'
+        flexDirection='row'
+        columnGap={2}
+        justifyContent={'space-around'}
+        width='20%'
+        marginLeft='auto'
+        display='inline-block'
+        gap={2}
       >
-        {
-          data && data.map(({status, userId : {username }}, index) => {
-            console.log(username, status);
-            return <Box key={index}
-            display='inline-block'
-            >{username}</Box>
-          })
-        }
+        <HStack
+          justifyContent={'space-around'}
+        >
+          {
+            data && data.map(({userId : {username }}, index) => {
+              return <Box
+                key={index}
+                bg='white'
+                p={1}
+                borderRadius='999px'
+              >
+                {username
+                }</Box>
+            })
+          }
+        </HStack>
       </Flex>
     </Flex>
   )

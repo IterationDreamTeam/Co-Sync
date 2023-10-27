@@ -52,6 +52,25 @@ export const userApi = createApi({
     moveTask: builder.mutation({
       query: (body) => ({ url: '/project/column/', method: 'PATCH', body }),
       invalidatesTags: ['Projects'],
+      async onQueryStarted({ projectId, oldColumnId, newColumnId, taskId }, { dispatch, queryFulfilled }) { 
+        console.log('moveTask onQueryStarted');
+
+        const patchResult = dispatch(userApi.util.updateQueryData('getUserProjects', { skip: false }, (draft) => {
+          console.log('inside Patch Result')
+          const project = draft.projects.find((project) => project._id === projectId);
+          const oldColumn = project.columns.find((column) => column._id === oldColumnId);
+          const newColumn = project.columns.find((column) => column._id === newColumnId);
+          const task = oldColumn.tasks.find((task) => task._id === taskId);
+          oldColumn.tasks.splice(oldColumn.tasks.indexOf(task), 1);
+          newColumn.tasks.push(task);
+        }));
+        try {
+          console.log('inside try')
+          await queryFulfilled
+        } catch {
+          patchResult.undo();
+        }
+      }
     }),
     updateTask: builder.mutation({
       query: (body) => ({ url: '/project/task', method: 'PATCH', body }),

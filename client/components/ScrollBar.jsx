@@ -74,9 +74,8 @@ const ScrollBar = ({ currentProject }) => {
   }
   return (
     <Box
-      
       bg='Interstellar.PalePink'
-      rounded='md'
+      rounded='sm'
       // boxShadow='md'
       width='95%'
       mt='.5rem'

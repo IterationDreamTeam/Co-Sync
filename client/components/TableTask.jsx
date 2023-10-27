@@ -13,32 +13,18 @@ import {
   AccordionIcon,
 } from '@chakra-ui/react'
 
-// Drag and Drop
-import { useDraggable } from '@dnd-kit/core';
-
 /*
   This component renders the individual tasks in the table columns.
   It also renders the TaskButton, TextModal, and ColumnViewModal components.
 */
 
 const TableTask = ({ task, column, currentProject, index }) => {
-  // Drag and Drop hooks
-  const { attributes, listeners, setNodeRef, transform, transition } = useDraggable({
-    id: task._id,
-  })
-
-  const style = transform ? {
-    transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
-  } : undefined;
-
   // had to set multiple states for different functionality but similiar purpose of state
   const [incomingData, setIncomingData] = useState('');
   const [comment, setComment] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const [isCommentOpen, setIsCommentOpen] = useState(false);
   const [isMoveOpen, setIsMoveOpen] = useState(false);
-  const [subtasks, setSubtasks] = useState(["Subdue Operations", "Extract Anomalies", "Field Adjacencies"])
-
 
   // must call mutations in a destructered array to then call later 
   const [deleteTaskMutation] = useDeleteTaskMutation();
@@ -153,7 +139,7 @@ const TableTask = ({ task, column, currentProject, index }) => {
 
   return (
 
-    <div style={{ zIndex: -index, ...style }} className="container" id="tableTaskMain" ref={setNodeRef} {...listeners} {...attributes}>{ /* zIndex is used to make sure the task buttons are always on top of the task and the tasks below in the list */}
+    <div style={{ zIndex: -index }} className="container" id="tableTaskMain">{ /* zIndex is used to make sure the task buttons are always on top of the task and the tasks below in the list */}
       <Accordion allowToggle>
         <AccordionItem>
           <AccordionButton>
@@ -163,9 +149,9 @@ const TableTask = ({ task, column, currentProject, index }) => {
           <AccordionPanel pb={4}>
             {task.taskComments !== '' &&
               <>
-                {task.taskComments.map(function (data) {
+                {task.taskComments.map((data, index) => {
                   return (
-                    <div className="commentBox">
+                    <div className="commentBox" key={index}>
                       <h6>
                         Comment:  {data}
                       </h6>

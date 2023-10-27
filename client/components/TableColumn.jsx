@@ -7,7 +7,7 @@ import { deleteColumn, createTask } from '../slices/userSlice.js';
 import { useDeleteColumnMutation, useAddTaskMutation } from '../utils/userApi.js';
 
 // Drag and Drop
-import { useDroppable } from '@dnd-kit/core';
+import Draggable from './Draggable.jsx';
 /*
   This component renders the individual columns in the table.
   It also renders the TableTask components, and is responsible for dispatching the actions column actions
@@ -16,15 +16,6 @@ import { useDroppable } from '@dnd-kit/core';
 
 // the functionality heres operates similarly to TableTask.jsx of using mutations from userApi.jsx, textmodals, and taskbuttons
 const TableColumn = ({ column, currentProject }) => {
-
-  const { isOver, setNodeRef } = useDroppable({
-    id: column._id,
-  });
-
-  const style = {
-    color: isOver ? 'green' : undefined,
-  }
-
   const [isOpen, setIsOpen] = useState(false);
   const [task, setTask] = useState('');
   // must call mutations in a destructered array to then call later 
@@ -84,7 +75,7 @@ const TableColumn = ({ column, currentProject }) => {
 
   // for return statement, we use conditional rendering for the components and pass in their actions created in this component for textmodal and taskbutton
   return (
-    <div className="container" id="tableColumnMain" ref={setNodeRef} style={style} >
+    <div className="container" id="tableColumnMain" >
       {isOpen ? <TextModal
         placeholder={'Task Name'}
         setterFunction={setTask}
@@ -107,7 +98,11 @@ const TableColumn = ({ column, currentProject }) => {
         />
       </div>
       {column.tasks.length ? column.tasks.map((task, index) => {
-        return <TableTask index={index} key={index} task={task} column={column} currentProject={currentProject} />;
+
+        return (
+          <Draggable key={`Draggable${index}`} {...task} >
+            <TableTask index={index} key={index} task={task} column={column} currentProject={currentProject} />
+          </Draggable>)
       }) : <h1>No Tasks Yet</h1>}
     </div>
   );

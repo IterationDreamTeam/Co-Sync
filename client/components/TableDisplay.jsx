@@ -3,9 +3,12 @@ import TableColumn from './TableColumn.jsx';
 import ScrollBar from './ScrollBar.jsx';
 import TableHeader from './TableHeader.jsx'
 import { useSelector } from 'react-redux';
+import { useMoveTaskMutation} from '../utils/userApi.js';
 
 // Drag and Drop
-import { DndContext } from '@dnd-kit/core';
+import { DndContext, DragOverlay,  useSensor, useSensors} from '@dnd-kit/core';
+import MyPointerSensor from '../utils/PointerSensor.js';
+import Droppable from './Droppable.jsx';
 
 /*
   This component renders the ScrollBar and TableColumn components.
@@ -13,7 +16,12 @@ import { DndContext } from '@dnd-kit/core';
 
 const TableDisplay = () => {
   // Drag and Drop hooks
-  const [isDropped, setIsDropped] = useState(false);
+  const [activeId, setActiveId] = useState(null);
+  const pointerSensor = useSensor(MyPointerSensor);
+  const sensors = useSensors(pointerSensor);
+
+  // Redux hooks
+  const [moveTask] =useMoveTaskMutation(); 
 
   const currentProject = useSelector((state) => state.user.projects[state.user.currentProject]);
   if (!currentProject) {
@@ -30,23 +38,48 @@ const TableDisplay = () => {
     <div id='tableDisplayOuter' className='container'>
       <ScrollBar currentProject={currentProject} />
       <TableHeader {...currentProject} />
-      <DndContext onDragEnd={handleDragEnd}>
+      <DndContext onDragStart={handleDragStart}  onDragEnd={handleDragEnd} sensors={sensors}>
+
         <div id='tableDisplayInner'>
           {currentProject.columns.map((column, index) => {
             // the column and columnName must exist to render each column -- or else will be undefined when trying to render the child component 
             if (column && column.columnName) {
-              return <TableColumn key={index} column={column} currentProject={currentProject} />;
+              return(
+                <Droppable id={column._id} key={index} {...column}>
+                  <TableColumn key={index} column={column} currentProject={currentProject} />
+                </Droppable>
+              );
             }
           })}
         </div>
+
+        <DragOverlay dropAnimation={{duration: 750, easing: 'cubic-bezier(0.18, 0.67,0.6,1.22)'}}>
+          {activeId && (
+            <p id={activeId}> Dummy </p>
+          )
+          }
+
+        </DragOverlay>
+
       </DndContext>
     </div>
   );
 
-  function handleDragEnd(event) {
-    console.log('handleDragEvent')
-    if (event.over && event.over.id === 'droppable') {
-      setIsDropped(true);
+  function handleDragStart(event) {
+    console.log('handleDragStart')
+    setActiveId(event.active.id)
+  }
+
+  async function handleDragEnd(event) {
+    console.log('handleDragEnd')
+
+    if (event.over) {
+      await moveTask({
+        projectId: event.active.data.current.currentProjectId,
+        oldColumnId: event.active.data.current.oldColumnId,
+        taskId: event.active.data.current.taskId,
+        newColumnId: event.over.data.current.newColumnId
+      })
     }
   }
 }
