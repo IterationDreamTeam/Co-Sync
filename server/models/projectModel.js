@@ -6,7 +6,7 @@ const taskSchema = new Schema({
   taskName: { type: String, required: true },
   taskComments: { type: [String] }
   //Would we want a deadline property on the task?
-})
+}, {timestamps: true})
 
 const columnSchema = new Schema({
   columnName: { type: String, required: true },

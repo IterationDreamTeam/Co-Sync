@@ -13,6 +13,12 @@ projectRouter.get('/',
   (req, res) => res.status(200).json(res.locals.projects)
 );
 
+projectRouter.get('/taskCreatedAt/:projectId/:columnId/:taskId',
+  projectController.getTaskCreatedAt,
+  (req, res) => res.status(200).json(res.locals.createdAt)
+)
+
+
 // create a project
 // req.body: a json object with the following fields:
 //   - projectName
