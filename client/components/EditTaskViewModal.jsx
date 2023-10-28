@@ -12,8 +12,10 @@ import Button from './Button.jsx';
 const EditTaskViewModal = ({   placeholder,
     setterFunction,
     saveFunc,
-    setIsEditModalOpen,
+    setIsPriorityOpen,
+    currentProject,
     title,
+    priority
    }) => {
 
   return (
@@ -24,22 +26,25 @@ const EditTaskViewModal = ({   placeholder,
           <button
             onClick={(e) => {
               e.preventDefault();
-              setIsEditModalOpen(prev => !prev);
+              setIsPriorityOpen(prev => !prev);
             }}
             className='closeModalButton'>
             x
           </button>
         </div>
-        <label>Priority:</label>
-
-        <select
-          value={setterFunction}
-          onChange={saveFunc}
-        >
-          <option value={1}>Low</option>
-          <option value={2}>Medium</option>
-          <option value={3}>High</option>
-          <option value={4}>Highest</option>
+        <select value={priority}>
+          <option onClick={saveFunc} value={'Low'}>
+            Low
+          </option>
+          <option onClick={saveFunc} value={'Medium'}>
+            Medium
+          </option>
+          <option onClick={saveFunc} value={'High'}>
+            High
+          </option>
+          <option onClick={saveFunc} value={'Highest'}>
+            Highest
+          </option>
         </select>
         {/* <Button
           saveFunc={saveFunc}

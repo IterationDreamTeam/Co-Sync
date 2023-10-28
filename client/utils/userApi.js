@@ -114,11 +114,7 @@ export const userApi = createApi({
       providesTags: ['Notifications'],
     }),
     editTaskPriority: builder.mutation({
-      query: (body) => ({
-        url: '/project/task/priority', 
-        method: 'PATCH', 
-        body, 
-      }),
+      query: (body) => ({ url: '/project/task', method: 'PATCH', body}),
       invalidatesTags: ['Projects'], 
     }),
   }),

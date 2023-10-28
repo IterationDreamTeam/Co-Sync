@@ -179,7 +179,7 @@ const createTask = async (req, res, next) => {
     const newTask = {
       taskName: req.body.taskName,
       taskStatus: '',
-      taskPriority: 0,
+      taskPriority: '',
       taskComments: []
     };
     column.tasks.push(newTask);
@@ -246,17 +246,15 @@ const updateTask = async (req, res, next) => {
         message: { err: 'task does not exist.' },
       });
     }
-    task.taskName = req.body.taskName;
+    
+      task.taskPriority = req.body.taskPriority;
 
-    // each new comment adds new property to taskComments object
-    let num = Object.keys(task.taskComments).length
+      task.taskName = req.body.taskName;
 
-    task.taskComments[num] = req.body.taskComments;
     await project.save();
-
     res.locals.task = task;
     console.log(task)
-    // res.locals.project = project;
+
     return next();
   } catch (error) {
     console.log(error);
@@ -269,6 +267,7 @@ const updateTask = async (req, res, next) => {
 
 
 const updateTaskPriority = async (req, res, next) => {
+console.log('MADE IT HERE!!!!!!!!!!!!!!')
   try {
     const project = await Project.findOne({
       _id: req.body.projectId
@@ -319,6 +318,7 @@ const updateTaskPriority = async (req, res, next) => {
     await project.save();
 
     res.locals.updatedPriority = task.taskPriority;
+
     return next();
   } catch (error) {
     console.log(error);

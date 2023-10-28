@@ -19,7 +19,7 @@ import {
 } from '@chakra-ui/react'
 /* 
   This component renders the individual tasks in the table columns.
-  It also renders the TaskButton, TextModal, and ColumnViewModal components.
+  It also renders the TaskButton, TextModal, EditTaskViewModal. and ColumnViewModal components.
 */
 
 const TableTask = ({ task, column, currentProject, index }) => {
@@ -31,6 +31,7 @@ const TableTask = ({ task, column, currentProject, index }) => {
   const [isCommentOpen, setIsCommentOpen] = useState(false);
   const [isCommentEdit, setIsCommentEdit] = useState(false);
   const [isMoveOpen, setIsMoveOpen] = useState(false);
+  const [isPriorityOpen,setIsPriorityOpen] = useState(false);
   const [commentID, setCommentID] = useState('')
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedOption,setSelectedOption] = useState('');
@@ -197,27 +198,20 @@ const TableTask = ({ task, column, currentProject, index }) => {
   };
 
   const handlePriorityChange = async (e) => {
-    console.log("tesing priority")
-    // console.log(e)
-
-    console.log('e',e.target.value);
-    console.log('type', typeof e.target.value);
-    // setPriority(parseInt(e.target.value));
-    console.log('priority', priority)
 
     const body = {
       projectId: currentProject._id,
       columnId: column._id,
       taskId: task._id,
-      taskPriority: incomingData,
+      taskName: task.taskName,
+      taskPriority: e.target.value,
     };
 
-    console.log(body)
     try {
       const res = await editTaskPriority(body);
       if (res.error) throw new Error(res.error.message);
-      dispatch(updateTask({ updatedPriority: res.data, columnId: column._id }));
-      setIsMoveOpen(false);
+      dispatch(updateTask({ updatedTask: res.data, columnId: column._id }));
+      setIsPriorityOpen(false);
     } catch (error) {
       console.log(error);
 };
@@ -237,7 +231,9 @@ const TableTask = ({ task, column, currentProject, index }) => {
         <AccordionItem>
           <AccordionButton>
             <p className='taskText'>{task.taskName}</p>
+            
             <AccordionIcon />
+            <p className='taskPriority'>{task.taskPriority}</p>
           </AccordionButton>
           <AccordionPanel pb={4}>
 
@@ -257,7 +253,6 @@ const TableTask = ({ task, column, currentProject, index }) => {
             })}
           </AccordionPanel>
         </AccordionItem>
-
         <div id='tableTaskButtons'>
           <TaskButton
             onClick={() => handleDeleteTask(task.taskName, column.columnName)}
@@ -279,7 +274,11 @@ const TableTask = ({ task, column, currentProject, index }) => {
             text='Move'
             idOverride='innerTaskButton'
           />
-          <button onClick={() => setIsEditModalOpen(true)}>Edit Task</button>
+           <TaskButton
+            onClick={() => { setIsPriorityOpen(!isPriorityOpen); }}
+            text='Priority'
+            idOverride='innerTaskButton'
+          />         
           {isOpen ? <TextModal
             placeholder={'Task Name'}
             setterFunction={setIncomingData}
@@ -300,11 +299,13 @@ const TableTask = ({ task, column, currentProject, index }) => {
             setIsOpen={setIsCommentOpen}
             title='Add Comment'
           /> : null}
-          {isEditModalOpen ? <EditTaskViewModal
+          {isPriorityOpen ? <EditTaskViewModal
           placeholder={'Edit Priority'}
           setterFunction={setPriority}
-          saveFunc={(e) => handlePriorityChange(e)}
-          setIsEditModalOpen={setIsEditModalOpen}
+          saveFunc={handlePriorityChange}
+          setIsPriorityOpen={setIsPriorityOpen}
+          currentProject={currentProject}
+          priority={priority}
           title='Edit Priortiy'
         /> : null}
           {isCommentEdit ? <TextModal

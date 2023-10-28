@@ -135,9 +135,9 @@ projectRouter.delete('/task/:projectId/:columnId/:taskId',
 //   - taskId
 //   - taskPriority
 // returns a 200 status with a success message.
-projectRouter.patch('/task/priority',
-  projectController.updateTaskPriority,
-  (req, res) => res.status(200).json({ updatedPriority: res.locals.updatedPriority })
-);
+// projectRouter.patch('/task',
+//   projectController.updateTaskPriority,
+//   (req, res) => res.status(200).json({ updatedPriority: res.locals.updatedPriority })
+// );
 
 module.exports = projectRouter;
