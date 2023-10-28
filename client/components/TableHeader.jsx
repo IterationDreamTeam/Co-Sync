@@ -9,14 +9,14 @@ const TableHeader = ({ projectName, _id:projectId }) => {
   return (
     <>
       <h1>{projectName}</h1>
-      <ol>
+      {/* <ol>
         {
           data && data.map(({ status, userId: { username } }, index) => {
             console.log(username, status);
             return <li key={index}>{username}</li>
           })
         }
-      </ol> */}
+      </ol>  */}
     </>
   )
 };

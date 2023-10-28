@@ -40,9 +40,9 @@
   background-color: rgba(255, 255, 255, 0.01);
   border-bottom: 1px solid rgb(255, 255, 255);
   // * sizing 
-  height: 20vh;
+  height: 8vh !important;
   width: 100%;
-  font-size: 3vh;
+  font-size: 2vh !important;
   // * animation 
   animation: slideInFromTop 1s;
   animation-delay: 0.5s;
@@ -84,6 +84,17 @@
     background-color: rgb(4, 35, 64) !important;
     padding: 0 !important;
   }
+
+  .notificationBox {
+    background-color: rgb(4, 35, 64) !important;
+  }
+
+  .notificationHeaderBox {
+    background-color: rgb(4, 35, 64) !important;
+    padding: 0 !important;
+  }
+
+
 
   h1 {
     margin: 0;
@@ -180,6 +191,7 @@
     font-size: 1.2rem;
     font-weight: 600;
   }
+
   .taskPriority {
     padding: 10;
     margin: 0.9rem;
@@ -190,6 +202,7 @@
     top: 0;
     right: 0;
   }
+
   #messagesButton {
     position: relative;
     justify-self: end;
@@ -231,8 +244,8 @@
   justify-content: center;
   width: 100%;
   border-bottom: 1px solid white;
-  height: 8vh;
-  font-size: 3vh;
+  height: 5vh;
+  font-size: 1vh;
   padding: 0px 10px;
 }
 

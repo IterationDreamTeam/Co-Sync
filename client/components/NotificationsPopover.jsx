@@ -11,38 +11,38 @@ const NotifPopover = () => {
   const [markAsRead] = useMarkAsReadMutation();
   const [markAllAsRead] = useMarkAllAsReadMutation();
 
-  const { data: notifications, isError: isNotificationsError, isLoading: isNotificationsLoading, isSuccess: isNotificationsSuccess, error: notificationsError } = useGetNotificationsQuery({ skip: !isAuth});
+  const { data: notifications, isError: isNotificationsError, isLoading: isNotificationsLoading, isSuccess: isNotificationsSuccess, error: notificationsError } = useGetNotificationsQuery({ skip: !isAuth });
   console.log('notifications', notifications);
   const notifs = notifications ? notifications.reduce((acc, notification) => {
     notification.isRead ? acc.read.push(notification) : acc.unread.push(notification)
     return acc;
   }, { read: [], unread: [] }) : null;
 
-  const isDisabled = notifs?.unread.length != 0  ? false : true;
+  const isDisabled = notifs?.unread.length != 0 ? false : true;
 
   const handleNotifOnClick = async ({ id, patch }) => {
     console.log('handleNotifOnClick')
-    console.log(id, patch); 
+    console.log(id, patch);
     await markAsRead({ id, patch })
   }
 
-  const handleMarkAllAsRead = async () => { 
+  const handleMarkAllAsRead = async () => {
     console.log('handleMarkAllAsRead');
     const unreadIds = notifs.unread.map((notif) => notif._id);
-    await markAllAsRead({ ids: unreadIds, patch: { isRead: true }  })
+    await markAllAsRead({ ids: unreadIds, patch: { isRead: true } })
   }
 
   return (
-    <Box id = 'notificationBox'
-    display='inline-block'
+    <Box id='notificationBox'
+      display='inline-block'
     >
-      <Popover size='md' >
+      <Popover size='md' className='notificationBox'>
         <PopoverTrigger>
-          <BellIcon className='bellIcon'   color='white'/>
+          <BellIcon className='bellIcon' color='white' />
         </PopoverTrigger>
         <PopoverContent>
           <PopoverArrow />
-          <PopoverHeader>
+          <PopoverHeader className='notificationHeaderBox' >
             <Flex justify='space-between' align='center' p={2}>
               <Box>
                 <Text>Notifications</Text>
@@ -52,26 +52,26 @@ const NotifPopover = () => {
               </Box>
             </Flex>
           </PopoverHeader>
-          <PopoverBody>
+          <PopoverBody className='notificationBox'>
             <Tabs>
               <TabList>
                 <Tab>Unread</Tab>
                 <Tab>All</Tab>
               </TabList>
-      
+
               <TabPanels p={0}>
                 <TabPanel p={0}>
                   <VStack p={0}>
                     {notifs?.unread ? notifs.unread.map((notif) => (
-                      <Notification id={notif.id}  key={notif._id} notification={notif} {...notif} NotifOnClick={handleNotifOnClick}></Notification>
-                    )): null}
+                      <Notification id={notif.id} key={notif._id} notification={notif} {...notif} NotifOnClick={handleNotifOnClick}></Notification>
+                    )) : null}
                   </VStack>
                 </TabPanel>
                 <TabPanel>
                   <VStack>
                     {notifs?.read ? notifs.read.map((notif) => (
-                      <Notification id={notif.id}  key={notif._id} notification={notif} {...notif} NotifOnClick={handleNotifOnClick}></Notification>
-                    )): null}
+                      <Notification id={notif.id} key={notif._id} notification={notif} {...notif} NotifOnClick={handleNotifOnClick}></Notification>
+                    )) : null}
                   </VStack>
                 </TabPanel>
               </TabPanels>

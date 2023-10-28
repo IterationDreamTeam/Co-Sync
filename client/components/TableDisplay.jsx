@@ -1,12 +1,12 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import TableColumn from './TableColumn.jsx';
 import ScrollBar from './ScrollBar.jsx';
 import TableHeader from './TableHeader.jsx'
 import { useSelector } from 'react-redux';
-import { useMoveTaskMutation} from '../utils/userApi.js';
+import { useMoveTaskMutation } from '../utils/userApi.js';
 
 // Drag and Drop
-import { DndContext, DragOverlay, useSensor, useSensors} from '@dnd-kit/core';
+import { DndContext, DragOverlay, useSensor, useSensors } from '@dnd-kit/core';
 import MyPointerSensor from '../utils/pointerSensor.js';
 import Droppable from './Droppable.jsx';
 import TableTask from './TableTask.jsx';
@@ -24,7 +24,7 @@ const TableDisplay = () => {
   const sensors = useSensors(pointerSensor);
 
   // Redux hooks
-  const [moveTask] =useMoveTaskMutation(); 
+  const [moveTask] = useMoveTaskMutation();
 
   const currentProject = useSelector((state) => state.user.projects[state.user.currentProject]);
   if (!currentProject) {
@@ -41,13 +41,13 @@ const TableDisplay = () => {
     <div id='tableDisplayOuter' className='container'>
       <ScrollBar currentProject={currentProject} />
       <TableHeader {...currentProject} />
-      <DndContext onDragStart={handleDragStart}  onDragEnd={handleDragEnd} sensors={sensors}>
+      <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd} sensors={sensors}>
 
         <div id='tableDisplayInner'>
           {currentProject.columns.map((column, index) => {
             // the column and columnName must exist to render each column -- or else will be undefined when trying to render the child component 
             if (column && column.columnName) {
-              return(
+              return (
                 <Droppable id={column._id} key={index} {...column}>
                   <TableColumn key={index} column={column} currentProject={currentProject} />
                 </Droppable>
@@ -56,13 +56,13 @@ const TableDisplay = () => {
           })}
         </div>
 
-        <DragOverlay >
+        {/* <DragOverlay >
           {activeId && (
             <PresentationalTableTask id={activeId}>  </PresentationalTableTask>
           )
           }
 
-        </DragOverlay>
+        </DragOverlay> */}
 
       </DndContext>
     </div>
