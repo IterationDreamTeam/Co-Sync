@@ -132,6 +132,10 @@ export const userApi = createApi({
       query: () => ({ url: '/notification', method: 'GET', credentials: 'include' }),
       providesTags: ['Notifications'],
     }),
+    editTaskPriority: builder.mutation({
+      query: (body) => ({ url: '/project/task', method: 'PATCH', body}),
+      invalidatesTags: ['Projects'], 
+    }),
     markAsRead: builder.mutation({
       query: ({ id, patch }) => ({ url: `/notification/${id}/read`, method: 'PATCH', body: patch, credentials: 'include' }),
       async onQueryStarted({ id, patch }, { dispatch, queryFulfilled }) {
@@ -198,6 +202,7 @@ export const {
   useRejectFriendRequestMutation,
   useRemoveFriendMutation,
   useGetNotificationsQuery,
+  useEditTaskPriorityMutation,
   useMarkAsReadMutation, 
   useMarkAllAsReadMutation,
   useSetDeadlineDateMutation

@@ -4,8 +4,9 @@ import { useDispatch } from 'react-redux';
 import TaskButton from './TaskButton.jsx';
 import TextModal from './TextModal.jsx';
 import ColumnViewModal from './ColumnViewModal.jsx';
+import EditTaskViewModal from './EditTaskViewModal.jsx';
 import DeadlineInputModal from './DeadlineInputModal.jsx';
-import { useDeleteTaskMutation, useUpdateTaskMutation, useMoveTaskMutation, useDeleteCommentMutation, useEditCommentMutation, useSetDeadlineDateMutation } from '../utils/userApi.js';
+import { useDeleteTaskMutation, useUpdateTaskMutation, useMoveTaskMutation, useEditTaskPriorityMutation, useDeleteCommentMutation, useEditCommentMutation, useSetDeadlineDateMutation } from '../utils/userApi.js';
 import {
   Accordion,
   AccordionItem,
@@ -24,18 +25,22 @@ import {
 import PresentationTableTask from './TableTaskPresentational.jsx'
 /*
   This component renders the individual tasks in the table columns.
-  It also renders the TaskButton, TextModal, and ColumnViewModal components.
+  It also renders the TaskButton, TextModal, EditTaskViewModal. and ColumnViewModal components.
 */
 
 const TableTask = ({ task, column, currentProject, index }) => {
   // had to set multiple states for different functionality but similiar purpose of state
   const [incomingData, setIncomingData] = useState('');
   const [comment, setComment] = useState(false);
+  const [priority, setPriority] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const [isCommentOpen, setIsCommentOpen] = useState(false);
   const [isCommentEdit, setIsCommentEdit] = useState(false);
   const [isMoveOpen, setIsMoveOpen] = useState(false);
+  const [isPriorityOpen,setIsPriorityOpen] = useState(false);
   const [commentID, setCommentID] = useState('')
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedOption,setSelectedOption] = useState('');
 
   const [isDetailsOpen, setIsDetailsOpen] = useState(false); // !LK
   const [deadlineDate, setDeadlineDate] = useState(task.deadlineDate); // !LK
@@ -45,6 +50,7 @@ const TableTask = ({ task, column, currentProject, index }) => {
   const [deleteTaskMutation] = useDeleteTaskMutation();
   const [updateTaskMutation] = useUpdateTaskMutation();
   const [moveTaskMutation] = useMoveTaskMutation();
+  const [editTaskPriority] = useEditTaskPriorityMutation();
   const [editCommentMutation] = useEditCommentMutation();
   const [deleteCommentMutation] = useDeleteCommentMutation();
   const [setDeadlineDateMutation] = useSetDeadlineDateMutation();
@@ -86,7 +92,6 @@ const TableTask = ({ task, column, currentProject, index }) => {
       columnId: column._id,
       taskId: task._id,
       taskName: incomingData,
-      taskComments: task.taskComments,
     };
     try {
       const res = await updateTaskMutation(body);
@@ -240,6 +245,27 @@ const TableTask = ({ task, column, currentProject, index }) => {
     }
   };
 
+  const handlePriorityChange = async (e) => {
+
+    const body = {
+      projectId: currentProject._id,
+      columnId: column._id,
+      taskId: task._id,
+      taskName: task.taskName,
+      taskPriority: e.target.value,
+    };
+
+    try {
+      const res = await editTaskPriority(body);
+      if (res.error) throw new Error(res.error.message);
+      dispatch(updateTask({ updatedTask: res.data, columnId: column._id }));
+      setIsPriorityOpen(false);
+    } catch (error) {
+      console.log(error);
+};
+
+  }
+
 
   // in the return rendering statement, we have multiple conditional statements to render the modals specified to their action
   // the taskbuttons corresponds with their textmodal for some functionality 
@@ -256,7 +282,9 @@ const TableTask = ({ task, column, currentProject, index }) => {
         <AccordionItem>
           <AccordionButton>
             <p className='taskText'>{task.taskName}</p>
+            
             <AccordionIcon />
+            <p className='taskPriority'>{task.taskPriority}</p>
           </AccordionButton>
           <AccordionPanel pb={4}>
 
@@ -276,7 +304,6 @@ const TableTask = ({ task, column, currentProject, index }) => {
             })}
           </AccordionPanel>
         </AccordionItem>
-
         <div id='tableTaskButtons'>
           <TaskButton
             onClick={() => handleDeleteTask(task.taskName, column.columnName)}
@@ -298,6 +325,11 @@ const TableTask = ({ task, column, currentProject, index }) => {
             text='Move'
             idOverride='innerTaskButton'
           />
+           <TaskButton
+            onClick={() => { setIsPriorityOpen(!isPriorityOpen); }}
+            text='Priority'
+            idOverride='innerTaskButton'
+          />         
           <TaskButton
             onClick={() => { handleDetailsButtonClick()}}
             text='Details'
@@ -329,6 +361,15 @@ const TableTask = ({ task, column, currentProject, index }) => {
             setIsOpen={setIsCommentOpen}
             title='Add Comment'
           /> : null}
+          {isPriorityOpen ? <EditTaskViewModal
+          placeholder={'Edit Priority'}
+          setterFunction={setPriority}
+          saveFunc={handlePriorityChange}
+          setIsPriorityOpen={setIsPriorityOpen}
+          currentProject={currentProject}
+          priority={priority}
+          title='Edit Priortiy'
+        /> : null}
           {isCommentEdit ? <TextModal
             placeholder={'Edit Comment'}
             setterFunction={setComment}

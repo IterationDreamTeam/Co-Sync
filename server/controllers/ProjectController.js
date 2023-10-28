@@ -126,7 +126,7 @@ const changeColumn = async (req, res, next) => {
 
     for (let i = 0; i < project.columns.length; i++) {
       if (project.columns[i]._id.toString() === newColumnId) {
-        const newTask = { taskName: task.taskName, taskComments: task.taskComments, _id: task._id };
+        const newTask = { taskName: task.taskName, taskStatus: task.taskStatus, taskPriority: task.taskPriority,taskComments: task.taskComments, _id: task._id };
         project.columns[i].tasks.push(newTask);
         // newColumn = project.columns[i];
         break;
@@ -180,6 +180,8 @@ const createTask = async (req, res, next) => {
     }
     const newTask = {
       taskName: req.body.taskName,
+      taskStatus: '',
+      taskPriority: '',
       taskComments: []
     };
     column.tasks.push(newTask);
@@ -243,17 +245,15 @@ const updateTask = async (req, res, next) => {
         message: { err: 'task does not exist.' },
       });
     }
-    console.log('Task.taskName', task.taskName)
+    
+    task.taskPriority = req.body.taskPriority;
+
     task.taskName = req.body.taskName;
 
-    // each new comment adds new property to taskComments object
-    let num = Object.keys(task.taskComments).length
-    task.taskComments[num] = req.body.taskComments;
-    await project.save();
+  await project.save();
+  res.locals.task = task;
+  console.log(task)
 
-    res.locals.task = task;
-    console.log(task)
-    // res.locals.project = project;
     return next();
   } catch (error) {
     console.log(error);
@@ -262,6 +262,78 @@ const updateTask = async (req, res, next) => {
       message: { err: 'Failed to updated a task' },
     })
   }
+};
+
+
+const updateTaskPriority = async (req, res, next) => {
+console.log('MADE IT HERE!!!!!!!!!!!!!!')
+  try {
+    const project = await Project.findOne({
+      _id: req.body.projectId
+    });
+    if (!project) {
+      return next({
+        status: 404,
+        log: 'project does not exist. ',
+        message: { err: 'project does not exist.' },
+      });
+    }
+    // console.log("Got Project: ", project);
+    // console.log("To find column: ", req.body.columnId);
+    // find the column;
+    let column;
+    for (let i = 0; i < project.columns.length; i++) {
+      if (project.columns[i]._id.toString() === req.body.columnId) {
+        column = project.columns[i];
+        break;
+      }
+    }
+    if (!column) {
+      return next({
+        status: 404,
+        log: 'column does not exist. ',
+        message: { err: 'column does not exist.' },
+      });
+    }
+    // console.log("Got Column: ", column);
+    // console.log("To find and update task: ", req.body.taskId);
+    // find the task, and update properties;
+    let task;
+    for (let i = 0; i < column.tasks.length; i++) {
+      if (column.tasks[i]._id.toString() === req.body.taskId) {
+        task = column.tasks[i];
+        break;
+      }
+    }
+    if (!task) {
+      return next({
+        status: 404,
+        log: 'task does not exist. ',
+        message: { err: 'task does not exist.' },
+      });
+    }
+    
+      task.taskPriority = req.body.taskPriority;
+
+      task.taskName = req.body.taskName;
+
+    // each new comment adds new property to taskComments object
+    let num = Object.keys(task.taskComments).length
+
+    task.taskComments[num] = req.body.taskComments;
+    await project.save();
+    res.locals.task = task;
+    console.log(task)
+
+    return next();
+  } catch (error) {
+    console.log(error);
+    next({
+      log: 'Failed to update a task priority:' + error,
+      message: { err: 'Failed to update a task priority' },
+    })
+  }
+
 };
 
 const editComment = async (req, res, next) => {
@@ -554,6 +626,7 @@ module.exports = {
   changeColumn,
   createTask,
   updateTask,
+  updateTaskPriority,
   editComment,
   deleteComment,
   deleteProject,

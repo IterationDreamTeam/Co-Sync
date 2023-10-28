@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 
 const taskSchema = new Schema({
   taskName: { type: String, required: true },
+  taskPriority: {type: String},
   taskComments: { type: [String] },
   deadlineDate: {type: String}
 }, {timestamps: true})

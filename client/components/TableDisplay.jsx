@@ -7,7 +7,7 @@ import { useMoveTaskMutation} from '../utils/userApi.js';
 
 // Drag and Drop
 import { DndContext, DragOverlay, useSensor, useSensors} from '@dnd-kit/core';
-import MyPointerSensor from '../utils/PointerSensor.js';
+import MyPointerSensor from '../utils/pointerSensor.js';
 import Droppable from './Droppable.jsx';
 import TableTask from './TableTask.jsx';
 
