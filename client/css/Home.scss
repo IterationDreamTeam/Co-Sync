@@ -29,10 +29,8 @@
   // ? Changed display from grid to flex
   // display: grid;
   // grid-template-columns: 1fr 1fr auto;
-
   display: flex;
   justify-content: space-between;
-  
   //  ? does the NavBar need to be this big? 
   align-items: center;
   position: relative;
@@ -49,7 +47,6 @@
   animation-delay: 0.5s;
   animation-fill-mode: both;
 
-
   ul {
     display: flex;
     margin: 0;
@@ -57,6 +54,7 @@
     width: fit-content;
     padding: 0;
     list-style: none; 
+    gap: 1rem; 
     // .routerLink {
     //   display: flex;
     //   align-items: center;
@@ -296,4 +294,8 @@
 
 h6 {
   margin: 6px;
+}
+
+.draggable {
+  width: 100%;
 }

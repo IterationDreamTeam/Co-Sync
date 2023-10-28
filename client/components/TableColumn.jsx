@@ -6,6 +6,9 @@ import TextModal from './TextModal.jsx';
 import { deleteColumn, createTask } from '../slices/userSlice.js';
 import { useDeleteColumnMutation, useAddTaskMutation } from '../utils/userApi.js';
 
+// Drag and Drop
+import Draggable from './Draggable.jsx';
+
 import {
   AlertDialog,
   AlertDialogBody,
@@ -17,6 +20,8 @@ import {
   Button,
   useDisclosure
 } from '@chakra-ui/react'
+
+
 /*
   This component renders the individual columns in the table.
   It also renders the TableTask components, and is responsible for dispatching the actions column actions
@@ -121,7 +126,10 @@ const TableColumn = ({ column, currentProject }) => {
         />
       </div>
       {column.tasks.length ? column.tasks.map((task, index) => {
-        return <TableTask index={index} key={index} task={task} column={column} currentProject={currentProject} />;
+        return (
+          <Draggable key={`Draggable${index}`} {...task} >
+            <TableTask index={index} key={index} task={task} column={column} currentProject={currentProject} />
+          </Draggable>)
       }) : <h1>No Tasks Yet</h1>}
       {/* // TODO: Alert Dialog starts here------------------------------- */}
       <AlertDialog

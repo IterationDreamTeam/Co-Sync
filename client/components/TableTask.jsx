@@ -20,6 +20,8 @@ import {
   EditablePreview,
   Text //
 } from '@chakra-ui/react'
+
+import PresentationTableTask from './TableTaskPresentational.jsx'
 /*
   This component renders the individual tasks in the table columns.
   It also renders the TaskButton, TextModal, and ColumnViewModal components.
@@ -76,6 +78,8 @@ const TableTask = ({ task, column, currentProject, index }) => {
   };
 
   const handleEditClick = async (e) => {
+    console.log('<<<<<')
+    console.log('The current project is', currentProject); 
     e.preventDefault();
     const body = {
       projectId: currentProject._id,
@@ -256,10 +260,10 @@ const TableTask = ({ task, column, currentProject, index }) => {
           </AccordionButton>
           <AccordionPanel pb={4}>
 
-            {Object.entries(task.taskComments).filter((value) => !"").map(function ([key, value], i) {
+            {Object.entries(task.taskComments).filter((value) => !"").map( ([key, value], i) => {
               let number = parseInt(key) + 1
               return (
-                <div className="commentBox">
+                <div key={i} className="commentBox">
                   <p>
                     {number} : {value}
                   </p>
