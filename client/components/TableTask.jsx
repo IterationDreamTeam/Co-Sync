@@ -299,11 +299,11 @@ const TableTask = ({ task, column, currentProject, index }) => {
             text='Details'
             idOverride='innerTaskButton'
           />
-          <TaskButton
+          {/* <TaskButton
             onClick={handleDeadlineButtonClick}
             text='Set Deadline'
             idOverride='innerTaskButton'
-          />
+          /> */}
           
           {isOpen ? <TextModal
             placeholder={'Task Name'}
@@ -355,6 +355,11 @@ const TableTask = ({ task, column, currentProject, index }) => {
             > 
               <Text>Created: {originalDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZoneName: 'short' })}</Text>
               {deadlineDate ?<Text>Deadline: { new Date(deadlineDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZoneName: 'short' })}</Text>:null}
+              <TaskButton
+            onClick={handleDeadlineButtonClick}
+            text='Set Deadline'
+            idOverride='innerTaskButton'
+          />
               </Box>
           </Collapse>
     </div>

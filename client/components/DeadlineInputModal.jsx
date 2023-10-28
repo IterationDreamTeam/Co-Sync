@@ -14,8 +14,8 @@ const DeadlineInputModal = ({ onSave, onCancel, initialDeadline }) => {
         value={deadline}
         onChange={(e) => setDeadline(e.target.value)}
       />
-      <button onClick={handleSave}>Save</button>
-      <button onClick={onCancel}>Cancel</button>
+      <button style={{marginLeft: '3px', border: '1px #2F4759 solid', borderRadius: '4px', backgroundColor: '#2F4759', paddingLeft: '1px', paddingRight: '1px'}} onClick={handleSave}>Save</button>
+      <button style={{marginLeft: '4px', border: '1px #2F4759 solid', borderRadius: '4px', backgroundColor: '#2F4759', paddingLeft: '1px'}} onClick={onCancel}>Cancel</button>
     </div>
   );
 };
