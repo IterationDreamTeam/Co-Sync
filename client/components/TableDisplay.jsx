@@ -9,6 +9,9 @@ import { useMoveTaskMutation} from '../utils/userApi.js';
 import { DndContext, DragOverlay, useSensor, useSensors} from '@dnd-kit/core';
 import MyPointerSensor from '../utils/PointerSensor.js';
 import Droppable from './Droppable.jsx';
+import TableTask from './TableTask.jsx';
+
+import PresentationalTableTask from './TableTaskPresentational.jsx';
 
 /*
   This component renders the ScrollBar and TableColumn components.
@@ -55,7 +58,7 @@ const TableDisplay = () => {
 
         <DragOverlay >
           {activeId && (
-            <p id={activeId}> Dummy </p>
+            <PresentationalTableTask id={activeId}>  </PresentationalTableTask>
           )
           }
 

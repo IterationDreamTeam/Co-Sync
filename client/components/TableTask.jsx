@@ -16,6 +16,8 @@ import {
   EditableTextarea,
   EditablePreview,
 } from '@chakra-ui/react'
+
+import PresentationTableTask from './TableTaskPresentational.jsx'
 /*
   This component renders the individual tasks in the table columns.
   It also renders the TaskButton, TextModal, and ColumnViewModal components.
@@ -108,7 +110,7 @@ const TableTask = ({ task, column, currentProject, index }) => {
     }
   }
 
-  const handleEditComment = async (e) => {
+  const handleEditComment = async () => {
     let newComment = comment
     console.log(newComment)
     const body = {
