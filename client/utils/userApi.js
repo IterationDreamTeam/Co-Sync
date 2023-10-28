@@ -165,6 +165,10 @@ export const userApi = createApi({
           patchResult.undo();
         }
       }
+    }),
+    setDeadlineDate: builder.mutation({
+      query: ({ projectId, columnId, taskId, deadlineDate }) => ({ url: `/project/task/${projectId}/${columnId}/${taskId}/${deadlineDate}`, method: 'POST', }),
+      invalidatesTags: ['Projects']
     })
   }),
 });
@@ -196,4 +200,5 @@ export const {
   useGetNotificationsQuery,
   useMarkAsReadMutation, 
   useMarkAllAsReadMutation,
+  useSetDeadlineDateMutation
 } = userApi;

@@ -127,4 +127,13 @@ projectRouter.delete('/task/:projectId/:columnId/:taskId',
   }
 );
 
+projectRouter.post('/task/:projectId/:columnId/:taskId/:deadlineDate',
+  projectController.setDeadlineDate,
+  (req, res) => {
+    res.statusMessage = 'Task deleted';
+    console.log('Deadline:', res.locals.deadline)
+    res.status(200).end();
+  }
+);
+
 module.exports = projectRouter;
