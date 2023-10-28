@@ -1,18 +1,17 @@
 import React from 'react';
 import { useGetAllCollaboratorsQuery } from '../utils/userApi';
 
-const TableHeader = ({ projectName, _id:projectId }) => {
-  
-  const { data } = useGetAllCollaboratorsQuery({projectId});
-  
+const TableHeader = ({ projectName, _id: projectId }) => {
+
+  const { data } = useGetAllCollaboratorsQuery({ projectId });
+
 
   return (
-    <>  
-      <p>{projectName}</p>
-      <p>{projectId}</p>
+    <>
+      <h1>{projectName}</h1>
       <ol>
         {
-          data && data.map(({status, userId : {username }}, index) => {
+          data && data.map(({ status, userId: { username } }, index) => {
             console.log(username, status);
             return <li key={index}>{username}</li>
           })
@@ -20,6 +19,6 @@ const TableHeader = ({ projectName, _id:projectId }) => {
       </ol>
     </>
   )
-}; 
+};
 
 export default TableHeader; 

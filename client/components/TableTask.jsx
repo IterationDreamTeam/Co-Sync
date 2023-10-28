@@ -244,11 +244,11 @@ const TableTask = ({ task, column, currentProject, index }) => {
             alt='comment'
             idOverride='innerTaskButton'
           />
-          <TaskButton
+          {/* <TaskButton
             onClick={() => { setIsMoveOpen(!isMoveOpen); }}
             text='Move'
             idOverride='innerTaskButton'
-          />
+          /> */}
           {isOpen ? <TextModal
             placeholder={'Task Name'}
             setterFunction={setIncomingData}

@@ -6,7 +6,7 @@ import Notification from './Notification.jsx';
 const NotificationPopover = ({notifications}) => { 
   
   return (
-    <Box
+    <Box id = 'notificationBox'
     display='inline-block'
     >
       <Popover size='md' >
