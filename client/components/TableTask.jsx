@@ -5,19 +5,25 @@ import TaskButton from './TaskButton.jsx';
 import TextModal from './TextModal.jsx';
 import ColumnViewModal from './ColumnViewModal.jsx';
 import EditTaskViewModal from './EditTaskViewModal.jsx';
-import { useDeleteTaskMutation, useUpdateTaskMutation, useMoveTaskMutation, useEditTaskPriorityMutation, useDeleteCommentMutation, useEditCommentMutation } from '../utils/userApi.js';
+import DeadlineInputModal from './DeadlineInputModal.jsx';
+import { useDeleteTaskMutation, useUpdateTaskMutation, useMoveTaskMutation, useEditTaskPriorityMutation, useDeleteCommentMutation, useEditCommentMutation, useSetDeadlineDateMutation } from '../utils/userApi.js';
 import {
   Accordion,
   AccordionItem,
   AccordionButton,
   AccordionPanel,
   AccordionIcon,
+  Box, //
+  Collapse, //
   Editable,
   EditableInput,
   EditableTextarea,
   EditablePreview,
+  Text //
 } from '@chakra-ui/react'
-/* 
+
+import PresentationTableTask from './TableTaskPresentational.jsx'
+/*
   This component renders the individual tasks in the table columns.
   It also renders the TaskButton, TextModal, EditTaskViewModal. and ColumnViewModal components.
 */
@@ -36,6 +42,9 @@ const TableTask = ({ task, column, currentProject, index }) => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedOption,setSelectedOption] = useState('');
 
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false); // !LK
+  const [deadlineDate, setDeadlineDate] = useState(task.deadlineDate); // !LK
+  const [isDeadlineModalOpen, setIsDeadlineModalOpen] = useState(false); // !LK
 
   // must call mutations in a destructered array to then call later 
   const [deleteTaskMutation] = useDeleteTaskMutation();
@@ -44,7 +53,18 @@ const TableTask = ({ task, column, currentProject, index }) => {
   const [editTaskPriority] = useEditTaskPriorityMutation();
   const [editCommentMutation] = useEditCommentMutation();
   const [deleteCommentMutation] = useDeleteCommentMutation();
+  const [setDeadlineDateMutation] = useSetDeadlineDateMutation();
   const dispatch = useDispatch();
+
+  const originalDate = new Date(task.createdAt);
+
+
+  // !LK
+  const handleDetailsButtonClick = () => {
+    setIsDetailsOpen(!isDetailsOpen);
+  };
+
+
 
   const handleInputChange = (e) => {
     e.preventDefault();
@@ -64,6 +84,8 @@ const TableTask = ({ task, column, currentProject, index }) => {
   };
 
   const handleEditClick = async (e) => {
+    console.log('<<<<<')
+    console.log('The current project is', currentProject); 
     e.preventDefault();
     const body = {
       projectId: currentProject._id,
@@ -111,7 +133,7 @@ const TableTask = ({ task, column, currentProject, index }) => {
     }
   }
 
-  const handleEditComment = async (e) => {
+  const handleEditComment = async () => {
     let newComment = comment
     console.log(newComment)
     const body = {
@@ -135,7 +157,6 @@ const TableTask = ({ task, column, currentProject, index }) => {
   }
 
   const handleDeleteComment = async (e) => {
-
     const body = {
       projectId: currentProject._id,
       columnId: column._id,
@@ -197,6 +218,33 @@ const TableTask = ({ task, column, currentProject, index }) => {
     }
   };
 
+  const handleDeadlineButtonClick = () => {
+    setIsDeadlineModalOpen(true);
+  };
+
+  const handleCloseDeadlineModal = () => {
+    setIsDeadlineModalOpen(false);
+  };
+
+  const handleSaveDeadline = async (newDeadlineDate) => {
+    console.log(newDeadlineDate)
+    const body = {
+      projectId: currentProject._id,
+      columnId: column._id,
+      taskId: task._id,
+      taskName: task.taskName,
+      deadlineDate: newDeadlineDate
+    };
+    try {
+      const res = await setDeadlineDateMutation(body);
+      if (res.error) throw new Error(res.error.message);
+      dispatch(updateTask({ updatedTask: res.data, columnId: column._id }));
+      setDeadlineDate(newDeadlineDate);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handlePriorityChange = async (e) => {
 
     const body = {
@@ -215,7 +263,10 @@ const TableTask = ({ task, column, currentProject, index }) => {
     } catch (error) {
       console.log(error);
 };
-}
+
+  }
+
+
   // in the return rendering statement, we have multiple conditional statements to render the modals specified to their action
   // the taskbuttons corresponds with their textmodal for some functionality 
   // each of the textmodals parameters is passed down from textmodal.jsx and passed in their action created in this component 
@@ -237,10 +288,10 @@ const TableTask = ({ task, column, currentProject, index }) => {
           </AccordionButton>
           <AccordionPanel pb={4}>
 
-            {Object.entries(task.taskComments).filter((value) => !"").map(function ([key, value], i) {
+            {Object.entries(task.taskComments).filter((value) => !"").map( ([key, value], i) => {
               let number = parseInt(key) + 1
               return (
-                <div className="commentBox">
+                <div key={i} className="commentBox">
                   <p>
                     {number} : {value}
                   </p>
@@ -279,6 +330,17 @@ const TableTask = ({ task, column, currentProject, index }) => {
             text='Priority'
             idOverride='innerTaskButton'
           />         
+          <TaskButton
+            onClick={() => { handleDetailsButtonClick()}}
+            text='Details'
+            idOverride='innerTaskButton'
+          />
+          {/* <TaskButton
+            onClick={handleDeadlineButtonClick}
+            text='Set Deadline'
+            idOverride='innerTaskButton'
+          /> */}
+          
           {isOpen ? <TextModal
             placeholder={'Task Name'}
             setterFunction={setIncomingData}
@@ -316,7 +378,35 @@ const TableTask = ({ task, column, currentProject, index }) => {
             title='Edit Comment'
           /> : null}
         </div>
-      </Accordion>
+        {isDeadlineModalOpen && (
+            <DeadlineInputModal
+                onSave={(newDeadline) => {
+                handleSaveDeadline(newDeadline);
+                handleCloseDeadlineModal();
+                }}
+                onCancel={handleCloseDeadlineModal}
+                initialDeadline={deadlineDate}
+            />
+        )}
+      </Accordion> 
+        <Collapse in={isDetailsOpen}>
+            <Box
+              p={2}
+              mt={2}
+              borderWidth="1px"
+              borderRadius="md"
+              boxShadow="md"
+              backgroundColor="#152330"
+            > 
+              <Text>Created: {originalDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZoneName: 'short' })}</Text>
+              {deadlineDate ?<Text>Deadline: { new Date(deadlineDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZoneName: 'short' })}</Text>:null}
+              <TaskButton
+            onClick={handleDeadlineButtonClick}
+            text='Set Deadline'
+            idOverride='innerTaskButton'
+          />
+              </Box>
+          </Collapse>
     </div>
 
   );

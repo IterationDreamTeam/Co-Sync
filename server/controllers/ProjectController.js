@@ -5,9 +5,11 @@ const Notification = require('../models/notificationModel');
 // get all projects
 const getProjects = async (req, res, next) => {
   try {
+    console.log('getProjects')
     const tasks = await Project.find();
+    console.log('Tasks', tasks)
     res.locals.projects = tasks;
-    // res.status(200).json(res.locals.projects);
+
     return next();
   } catch (error) {
     console.log(error);
@@ -186,7 +188,6 @@ const createTask = async (req, res, next) => {
     const updatedProject = await project.save();
 
     res.locals.task = updatedProject.columns[columnIndex].tasks[updatedProject.columns[columnIndex].tasks.length - 1];
-    // res.locals.project = project;
     return next();
   } catch (error) {
     console.log(error);
@@ -202,6 +203,8 @@ const updateTask = async (req, res, next) => {
   // will need projectId, columnId and taskId in the request body;
   // will also need updatedTask object in the request body;
   try {
+    console.log('updateTask')
+    console.log('ReqBody: ', req.body)
     const project = await Project.findOne({
       _id: req.body.projectId
     });
@@ -212,9 +215,7 @@ const updateTask = async (req, res, next) => {
         message: { err: 'project does not exist.' },
       });
     }
-    // console.log("Got Project: ", project);
-    // console.log("To find column: ", req.body.columnId);
-    // find the column;
+
     let column;
     for (let i = 0; i < project.columns.length; i++) {
       if (project.columns[i]._id.toString() === req.body.columnId) {
@@ -229,9 +230,7 @@ const updateTask = async (req, res, next) => {
         message: { err: 'column does not exist.' },
       });
     }
-    // console.log("Got Column: ", column);
-    // console.log("To find and update task: ", req.body.taskId);
-    // find the task, and update properties;
+
     let task;
     for (let i = 0; i < column.tasks.length; i++) {
       if (column.tasks[i]._id.toString() === req.body.taskId) {
@@ -247,13 +246,13 @@ const updateTask = async (req, res, next) => {
       });
     }
     
-      task.taskPriority = req.body.taskPriority;
+    task.taskPriority = req.body.taskPriority;
 
-      task.taskName = req.body.taskName;
+    task.taskName = req.body.taskName;
 
-    await project.save();
-    res.locals.task = task;
-    console.log(task)
+  await project.save();
+  res.locals.task = task;
+  console.log(task)
 
     return next();
   } catch (error) {
@@ -313,11 +312,18 @@ console.log('MADE IT HERE!!!!!!!!!!!!!!')
         message: { err: 'task does not exist.' },
       });
     }
-    task.taskPriority = req.body.taskPriority;
+    
+      task.taskPriority = req.body.taskPriority;
 
+      task.taskName = req.body.taskName;
+
+    // each new comment adds new property to taskComments object
+    let num = Object.keys(task.taskComments).length
+
+    task.taskComments[num] = req.body.taskComments;
     await project.save();
-
-    res.locals.updatedPriority = task.taskPriority;
+    res.locals.task = task;
+    console.log(task)
 
     return next();
   } catch (error) {
@@ -329,8 +335,9 @@ console.log('MADE IT HERE!!!!!!!!!!!!!!')
   }
 
 };
+
 const editComment = async (req, res, next) => {
-  console.log("Begin Edit Comment script")
+  console.log('Begin Edit Comment script')
   console.log(req.body)
 
   try {
@@ -549,6 +556,69 @@ const deleteTask = async (req, res, next) => {
   }
 };
 
+const setDeadlineDate = async (req, res, next) => {
+  try {
+    const projectId = req.params.projectId;
+    const columnId = req.params.columnId;
+    const taskId = req.params.taskId;
+
+    const project = await Project.findOne({
+      _id: projectId
+    });
+    if (!project) {
+      return next({
+        status: 404,
+        log: 'project does not exist. ',
+        message: { err: 'project does not exist.' },
+      });
+    }
+    // find column by id;
+    let column;
+    let columnIndex;
+    for (let i = 0; i < project.columns.length; i++) {
+      if (project.columns[i]._id.toString() === columnId) {
+        column = project.columns[i];
+        columnIndex = i;
+        break;
+      }
+    }
+    if (!column) {
+      return next({
+        status: 404,
+        log: 'column does not exist. ',
+        message: { err: 'column does not exist.' },
+      });
+    }
+
+    let taskIndex;
+    for (let i = 0; i < column.tasks.length; i++) {
+      if (column.tasks[i]._id.toString() === taskId) {
+        taskIndex = i;
+        break;
+      }
+    }
+    if (taskIndex === undefined) {
+      return next({
+        status: 404,
+        log: 'task does not exist. ',
+        message: { err: 'task does not exist.' },
+      });
+    }
+    column.tasks[taskIndex]['deadlineDate'] = req.params.deadlineDate;
+    await project.save();
+    res.locals.deadline = column.tasks[taskIndex]['deadlineDate']
+    return next();
+
+  } catch (error) {
+    console.log(error);
+    next({
+      log: 'Failed to set deadlineDate ' + error,
+      message: { err: 'Failed to set deadlineDate' },
+    })
+  }
+}
+
+
 module.exports = {
   getProjects,
   createProject,
@@ -562,4 +632,5 @@ module.exports = {
   deleteProject,
   deleteColumn,
   deleteTask,
+  setDeadlineDate
 };
