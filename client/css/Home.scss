@@ -29,7 +29,6 @@
   // ? Changed display from grid to flex
   // display: grid;
   // grid-template-columns: 1fr 1fr auto;
-
   display: flex;
   justify-content: space-between;
 
@@ -48,7 +47,6 @@
   animation: slideInFromTop 1s;
   animation-delay: 0.5s;
   animation-fill-mode: both;
-
 
   ul {
     display: flex;
@@ -182,7 +180,16 @@
     font-size: 1.2rem;
     font-weight: 600;
   }
-
+  .taskPriority {
+    padding: 10;
+    margin: 0.9rem;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 150;
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
   #messagesButton {
     position: relative;
     justify-self: end;
@@ -313,4 +320,8 @@
 
 h6 {
   margin: 6px;
+}
+
+.draggable {
+  width: 100%;
 }

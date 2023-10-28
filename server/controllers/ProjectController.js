@@ -5,9 +5,11 @@ const Notification = require('../models/notificationModel');
 // get all projects
 const getProjects = async (req, res, next) => {
   try {
+    console.log('getProjects')
     const tasks = await Project.find();
+    console.log('Tasks', tasks)
     res.locals.projects = tasks;
-    // res.status(200).json(res.locals.projects);
+
     return next();
   } catch (error) {
     console.log(error);
@@ -124,7 +126,7 @@ const changeColumn = async (req, res, next) => {
 
     for (let i = 0; i < project.columns.length; i++) {
       if (project.columns[i]._id.toString() === newColumnId) {
-        const newTask = { taskName: task.taskName, taskComments: task.taskComments, _id: task._id };
+        const newTask = { taskName: task.taskName, taskStatus: task.taskStatus, taskPriority: task.taskPriority,taskComments: task.taskComments, _id: task._id };
         project.columns[i].tasks.push(newTask);
         // newColumn = project.columns[i];
         break;
@@ -178,13 +180,14 @@ const createTask = async (req, res, next) => {
     }
     const newTask = {
       taskName: req.body.taskName,
+      taskStatus: '',
+      taskPriority: '',
       taskComments: []
     };
     column.tasks.push(newTask);
     const updatedProject = await project.save();
 
     res.locals.task = updatedProject.columns[columnIndex].tasks[updatedProject.columns[columnIndex].tasks.length - 1];
-    // res.locals.project = project;
     return next();
   } catch (error) {
     console.log(error);
@@ -199,6 +202,71 @@ const createTask = async (req, res, next) => {
 const updateTask = async (req, res, next) => {
   // will need projectId, columnId and taskId in the request body;
   // will also need updatedTask object in the request body;
+  try {
+    console.log('updateTask')
+    console.log('ReqBody: ', req.body)
+    const project = await Project.findOne({
+      _id: req.body.projectId
+    });
+    if (!project) {
+      return next({
+        status: 404,
+        log: 'project does not exist. ',
+        message: { err: 'project does not exist.' },
+      });
+    }
+
+    let column;
+    for (let i = 0; i < project.columns.length; i++) {
+      if (project.columns[i]._id.toString() === req.body.columnId) {
+        column = project.columns[i];
+        break;
+      }
+    }
+    if (!column) {
+      return next({
+        status: 404,
+        log: 'column does not exist. ',
+        message: { err: 'column does not exist.' },
+      });
+    }
+
+    let task;
+    for (let i = 0; i < column.tasks.length; i++) {
+      if (column.tasks[i]._id.toString() === req.body.taskId) {
+        task = column.tasks[i];
+        break;
+      }
+    }
+    if (!task) {
+      return next({
+        status: 404,
+        log: 'task does not exist. ',
+        message: { err: 'task does not exist.' },
+      });
+    }
+    
+    task.taskPriority = req.body.taskPriority;
+
+    task.taskName = req.body.taskName;
+
+  await project.save();
+  res.locals.task = task;
+  console.log(task)
+
+    return next();
+  } catch (error) {
+    console.log(error);
+    next({
+      log: 'Failed to update a task: ' + error,
+      message: { err: 'Failed to updated a task' },
+    })
+  }
+};
+
+
+const updateTaskPriority = async (req, res, next) => {
+console.log('MADE IT HERE!!!!!!!!!!!!!!')
   try {
     const project = await Project.findOne({
       _id: req.body.projectId
@@ -244,29 +312,32 @@ const updateTask = async (req, res, next) => {
         message: { err: 'task does not exist.' },
       });
     }
-    task.taskName = req.body.taskName;
+    
+      task.taskPriority = req.body.taskPriority;
+
+      task.taskName = req.body.taskName;
 
     // each new comment adds new property to taskComments object
     let num = Object.keys(task.taskComments).length
 
     task.taskComments[num] = req.body.taskComments;
     await project.save();
-
     res.locals.task = task;
     console.log(task)
-    // res.locals.project = project;
+
     return next();
   } catch (error) {
     console.log(error);
     next({
-      log: 'Failed to update a task: ' + error,
-      message: { err: 'Failed to updated a task' },
+      log: 'Failed to update a task priority:' + error,
+      message: { err: 'Failed to update a task priority' },
     })
   }
+
 };
 
 const editComment = async (req, res, next) => {
-  console.log("Begin Edit Comment script")
+  console.log('Begin Edit Comment script')
   console.log(req.body)
 
   try {
@@ -485,6 +556,69 @@ const deleteTask = async (req, res, next) => {
   }
 };
 
+const setDeadlineDate = async (req, res, next) => {
+  try {
+    const projectId = req.params.projectId;
+    const columnId = req.params.columnId;
+    const taskId = req.params.taskId;
+
+    const project = await Project.findOne({
+      _id: projectId
+    });
+    if (!project) {
+      return next({
+        status: 404,
+        log: 'project does not exist. ',
+        message: { err: 'project does not exist.' },
+      });
+    }
+    // find column by id;
+    let column;
+    let columnIndex;
+    for (let i = 0; i < project.columns.length; i++) {
+      if (project.columns[i]._id.toString() === columnId) {
+        column = project.columns[i];
+        columnIndex = i;
+        break;
+      }
+    }
+    if (!column) {
+      return next({
+        status: 404,
+        log: 'column does not exist. ',
+        message: { err: 'column does not exist.' },
+      });
+    }
+
+    let taskIndex;
+    for (let i = 0; i < column.tasks.length; i++) {
+      if (column.tasks[i]._id.toString() === taskId) {
+        taskIndex = i;
+        break;
+      }
+    }
+    if (taskIndex === undefined) {
+      return next({
+        status: 404,
+        log: 'task does not exist. ',
+        message: { err: 'task does not exist.' },
+      });
+    }
+    column.tasks[taskIndex]['deadlineDate'] = req.params.deadlineDate;
+    await project.save();
+    res.locals.deadline = column.tasks[taskIndex]['deadlineDate']
+    return next();
+
+  } catch (error) {
+    console.log(error);
+    next({
+      log: 'Failed to set deadlineDate ' + error,
+      message: { err: 'Failed to set deadlineDate' },
+    })
+  }
+}
+
+
 module.exports = {
   getProjects,
   createProject,
@@ -492,9 +626,11 @@ module.exports = {
   changeColumn,
   createTask,
   updateTask,
+  updateTaskPriority,
   editComment,
   deleteComment,
   deleteProject,
   deleteColumn,
   deleteTask,
+  setDeadlineDate
 };

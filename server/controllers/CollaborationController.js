@@ -1,7 +1,6 @@
 const Collaboration = require('../models/collaborationModel');
 const User = require('../models/userModel');
 const Notification = require('../models/notificationModel');
-const Project = require('../models/projectModel');
 
 const collaborationController = {
   /**
@@ -87,7 +86,7 @@ const collaborationController = {
   getCollaborators: async (req, res, next) => { 
     try {
       console.log('viewCollaboraors'); 
-      const { params: { id: projectId }, cookies: { ssid: creator } } = req; 
+      const { params: { id: projectId }} = req; 
 
       const collaboration = await Collaboration.findOne({ projectId }).populate({
         path: 'collaborators.userId',
@@ -95,10 +94,11 @@ const collaborationController = {
       }); 
  
       if (!collaboration) {
-        throw {
-          status: 400,
-          message: { err: 'Collaboration not found' }
-        }
+        // throw {
+        //   status: 400,
+        //   message: { err: 'Collaboration not found' }
+        // }
+        return res.status(200).json({ message: 'No collaborators' });
       }
 
       const collaborators = collaboration.collaborators; 

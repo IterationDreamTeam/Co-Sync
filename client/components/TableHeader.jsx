@@ -1,10 +1,10 @@
 import React from 'react';
 import { useGetAllCollaboratorsQuery } from '../utils/userApi';
 
-const TableHeader = ({ projectName, _id: projectId }) => {
-
-  const { data } = useGetAllCollaboratorsQuery({ projectId });
-
+const TableHeader = ({ projectName, _id:projectId }) => {
+  
+  // const { data } = useGetAllCollaboratorsQuery({projectId});
+  
 
   return (
     <>
@@ -16,7 +16,7 @@ const TableHeader = ({ projectName, _id: projectId }) => {
             return <li key={index}>{username}</li>
           })
         }
-      </ol>
+      </ol> */}
     </>
   )
 };

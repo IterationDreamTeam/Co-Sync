@@ -1,8 +1,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { resetState } from '../slices/userSlice.js';
-import { userApi, useLogoutUserMutation } from '../utils/userApi.js';
+import { useLogoutUserMutation } from '../utils/userApi.js';
 import { useGetNotificationsQuery } from '../utils/userApi.js';
 // import { BellIcon } from '@chakra-ui/icons'
 
@@ -26,9 +25,6 @@ import ProfilePopover from './ProfilePopover.jsx';
 */
 
 const NavBar = () => {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const [logout] = useLogoutUserMutation();
   const isAuth = localStorage.getItem('isAuth');
   const { data: notifications, isError: isNotificationsError, isLoading: isNotificationsLoading, isSuccess: isNotificationsSuccess, error: notificationsError } = useGetNotificationsQuery({ skip: !isAuth });
 
@@ -44,9 +40,12 @@ const NavBar = () => {
       <ul>
         <li>
           <NotificationPopover notifications={notifications} />
-          <ProfilePopover />
+
           {/* <Link className='routerLink' to='/settings'>Settings</Link> */}
           {/* <button className='routerLink' onClick={handleLogout} type='button' >Logout</button> */}
+        </li>
+        <li>
+          <ProfilePopover />
         </li>
       </ul>
     </nav>
