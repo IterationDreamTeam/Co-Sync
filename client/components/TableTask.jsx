@@ -4,7 +4,8 @@ import { useDispatch } from 'react-redux';
 import TaskButton from './TaskButton.jsx';
 import TextModal from './TextModal.jsx';
 import ColumnViewModal from './ColumnViewModal.jsx';
-import { useDeleteTaskMutation, useUpdateTaskMutation, useMoveTaskMutation, useDeleteCommentMutation, useEditCommentMutation } from '../utils/userApi.js';
+import DeadlineInputModal from './DeadlineInputModal.jsx';
+import { useDeleteTaskMutation, useUpdateTaskMutation, useMoveTaskMutation, useDeleteCommentMutation, useEditCommentMutation, useSetDeadlineDateMutation } from '../utils/userApi.js';
 import {
   Accordion,
   AccordionItem,
@@ -35,6 +36,8 @@ const TableTask = ({ task, column, currentProject, index }) => {
   const [commentID, setCommentID] = useState('')
 
   const [isDetailsOpen, setIsDetailsOpen] = useState(false); // !LK
+  const [deadlineDate, setDeadlineDate] = useState(task.deadlineDate); // !LK
+  const [isDeadlineModalOpen, setIsDeadlineModalOpen] = useState(false); // !LK
 
   // must call mutations in a destructered array to then call later 
   const [deleteTaskMutation] = useDeleteTaskMutation();
@@ -42,11 +45,11 @@ const TableTask = ({ task, column, currentProject, index }) => {
   const [moveTaskMutation] = useMoveTaskMutation();
   const [editCommentMutation] = useEditCommentMutation();
   const [deleteCommentMutation] = useDeleteCommentMutation();
+  const [setDeadlineDateMutation] = useSetDeadlineDateMutation();
   const dispatch = useDispatch();
 
   const originalDate = new Date(task.createdAt);
-  const deadlineDate = new Date(originalDate);
-  deadlineDate.setDate(deadlineDate.getDate() + 5);
+
 
   // !LK
   const handleDetailsButtonClick = () => {
@@ -145,7 +148,6 @@ const TableTask = ({ task, column, currentProject, index }) => {
   }
 
   const handleDeleteComment = async (e) => {
-
     const body = {
       projectId: currentProject._id,
       columnId: column._id,
@@ -206,6 +208,34 @@ const TableTask = ({ task, column, currentProject, index }) => {
       console.log('Error in handleDeleteClick: ', error);
     }
   };
+
+  const handleDeadlineButtonClick = () => {
+    setIsDeadlineModalOpen(true);
+  };
+
+  const handleCloseDeadlineModal = () => {
+    setIsDeadlineModalOpen(false);
+  };
+
+  const handleSaveDeadline = async (newDeadlineDate) => {
+    console.log(newDeadlineDate)
+    const body = {
+      projectId: currentProject._id,
+      columnId: column._id,
+      taskId: task._id,
+      taskName: task.taskName,
+      deadlineDate: newDeadlineDate
+    };
+    try {
+      const res = await setDeadlineDateMutation(body);
+      if (res.error) throw new Error(res.error.message);
+      dispatch(updateTask({ updatedTask: res.data, columnId: column._id }));
+      setDeadlineDate(newDeadlineDate);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
 
   // in the return rendering statement, we have multiple conditional statements to render the modals specified to their action
   // the taskbuttons corresponds with their textmodal for some functionality 
@@ -269,6 +299,11 @@ const TableTask = ({ task, column, currentProject, index }) => {
             text='Details'
             idOverride='innerTaskButton'
           />
+          <TaskButton
+            onClick={handleDeadlineButtonClick}
+            text='Set Deadline'
+            idOverride='innerTaskButton'
+          />
           
           {isOpen ? <TextModal
             placeholder={'Task Name'}
@@ -298,7 +333,16 @@ const TableTask = ({ task, column, currentProject, index }) => {
             title='Edit Comment'
           /> : null}
         </div>
-       
+        {isDeadlineModalOpen && (
+            <DeadlineInputModal
+                onSave={(newDeadline) => {
+                handleSaveDeadline(newDeadline);
+                handleCloseDeadlineModal();
+                }}
+                onCancel={handleCloseDeadlineModal}
+                initialDeadline={deadlineDate}
+            />
+        )}
       </Accordion> 
         <Collapse in={isDetailsOpen}>
             <Box
@@ -310,8 +354,8 @@ const TableTask = ({ task, column, currentProject, index }) => {
               backgroundColor="#152330"
             > 
               <Text>Created: {originalDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZoneName: 'short' })}</Text>
-              <Text>Deadline: {deadlineDate ? deadlineDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZoneName: 'short' }) : 'None'}</Text>
-            </Box>
+              {deadlineDate ?<Text>Deadline: { new Date(deadlineDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZoneName: 'short' })}</Text>:null}
+              </Box>
           </Collapse>
     </div>
 

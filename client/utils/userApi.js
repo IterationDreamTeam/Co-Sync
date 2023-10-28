@@ -113,6 +113,10 @@ export const userApi = createApi({
       query: () => ({ url: '/notification',  method: 'GET', credentials: 'include' }),
       providesTags: ['Notifications'],
     }),
+    setDeadlineDate: builder.mutation({
+      query: ({ projectId, columnId, taskId, deadlineDate }) => ({ url: `/project/task/${projectId}/${columnId}/${taskId}/${deadlineDate}`, method: 'POST', }),
+      invalidatesTags: ['Projects']
+    })
   }),
 });
 
@@ -142,4 +146,5 @@ export const {
   useRejectFriendRequestMutation,
   useRemoveFriendMutation,
   useGetNotificationsQuery,
+  useSetDeadlineDateMutation
 } = userApi;

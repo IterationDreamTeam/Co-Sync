@@ -4,8 +4,8 @@ const Schema = mongoose.Schema;
 
 const taskSchema = new Schema({
   taskName: { type: String, required: true },
-  taskComments: { type: [String] }
-  //Would we want a deadline property on the task?
+  taskComments: { type: [String] },
+  deadlineDate: {type: String}
 }, {timestamps: true})
 
 const columnSchema = new Schema({
