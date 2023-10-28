@@ -12,7 +12,7 @@ const NotifPopover = () => {
   const [markAllAsRead] = useMarkAllAsReadMutation();
 
   const { data: notifications, isError: isNotificationsError, isLoading: isNotificationsLoading, isSuccess: isNotificationsSuccess, error: notificationsError } = useGetNotificationsQuery({ skip: !isAuth});
-
+  console.log('notifications', notifications);
   const notifs = notifications ? notifications.reduce((acc, notification) => {
     notification.isRead ? acc.read.push(notification) : acc.unread.push(notification)
     return acc;

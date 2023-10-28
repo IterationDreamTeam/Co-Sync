@@ -13,7 +13,7 @@ const Droppable = (props) => {
     color: isOver ? 'green' : undefined,
   }
   return (
-    <div ref={setNodeRef} style={style}>
+    <div className='droppable' ref={setNodeRef} style={style}>
       {props.children}
     </div>
   )

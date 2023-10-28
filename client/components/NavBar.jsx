@@ -40,9 +40,12 @@ const NavBar = () => {
       <ul>
         <li>
           <NotificationPopover notifications={notifications} />
-          <ProfilePopover />
+
           {/* <Link className='routerLink' to='/settings'>Settings</Link> */}
           {/* <button className='routerLink' onClick={handleLogout} type='button' >Logout</button> */}
+        </li>
+        <li>
+          <ProfilePopover />
         </li>
       </ul>
     </nav>

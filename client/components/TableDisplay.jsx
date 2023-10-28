@@ -6,10 +6,9 @@ import { useSelector } from 'react-redux';
 import { useMoveTaskMutation} from '../utils/userApi.js';
 
 // Drag and Drop
-import { DndContext, DragOverlay, TouchSensor, useSensor, useSensors} from '@dnd-kit/core';
+import { DndContext, DragOverlay, useSensor, useSensors} from '@dnd-kit/core';
 import MyPointerSensor from '../utils/PointerSensor.js';
 import Droppable from './Droppable.jsx';
-
 
 /*
   This component renders the ScrollBar and TableColumn components.
@@ -19,13 +18,7 @@ const TableDisplay = () => {
   // Drag and Drop hooks
   const [activeId, setActiveId] = useState(null);
   const pointerSensor = useSensor(MyPointerSensor);
-  const touchSensor = useSensor(TouchSensor, {
-    activationConstraint: {
-      delay: 10000,
-      tolerence: 5,
-    }
-  }); 
-  const sensors = useSensors(pointerSensor, touchSensor);
+  const sensors = useSensors(pointerSensor);
 
   // Redux hooks
   const [moveTask] =useMoveTaskMutation(); 
@@ -35,7 +28,7 @@ const TableDisplay = () => {
     return (
       <>
         <div id='tableDisplayOuter' className='container'>
-        <ScrollBar currentProject={currentProject} />
+          <ScrollBar currentProject={currentProject} />
           <h1>Please Select A Project</h1>
         </div>
       </>
@@ -60,7 +53,7 @@ const TableDisplay = () => {
           })}
         </div>
 
-        <DragOverlay dropAnimation={{duration: 750, easing: 'cubic-bezier(0.18, 0.67,0.6,1.22)'}}>
+        <DragOverlay >
           {activeId && (
             <p id={activeId}> Dummy </p>
           )
