@@ -237,56 +237,56 @@ const TableTask = ({ task, column, currentProject, index }) => {
       </Accordion>
 
 
-        <div id='tableTaskButtons'>
-          <TaskButton
-            onClick={() => handleDeleteTask(task.taskName, column.columnName)}
-            text='Delete'
-            idOverride='innerTaskButton' />
-          <TaskButton
-            onClick={(e) => handleInputChange(e)}
-            text='Edit'
-            idOverride='innerTaskButton'
-          />
-          <TaskButton
-            onClick={(e) => handleInputCommentChange(e)}
-            imgSrc='../assets/messages.svg'
-            alt='comment'
-            idOverride='innerTaskButton'
-          />
-          <TaskButton
-            onClick={() => { setIsMoveOpen(!isMoveOpen); }}
-            text='Move'
-            idOverride='innerTaskButton'
-          />
-          {isOpen ? <TextModal
-            placeholder={'Task Name'}
-            setterFunction={setIncomingData}
-            saveFunc={(e) => handleEditClick(e)}
-            setIsOpen={setIsOpen}
-            title='Edit Task'
-          /> : null}
-          {isMoveOpen ? <ColumnViewModal
-            setIsOpen={setIsMoveOpen}
-            title='Select Column to Move to'
-            saveFunc={handleMoveTask}
-            currentProject={currentProject}
-          /> : null}
-          {isCommentOpen ? <TextModal
-            placeholder={'Task Comment'}
-            setterFunction={setComment}
-            saveFunc={(e) => handleAddComment(e)}
-            setIsOpen={setIsCommentOpen}
-            title='Add Comment'
-          /> : null}
-          {isCommentEdit ? <TextModal
-            placeholder={'Edit Comment'}
-            setterFunction={setComment}
-            saveFunc={(e) => handleEditComment(e)}
-            setIsOpen={setIsCommentEdit}
-            title='Edit Comment'
-          /> : null}
-        </div>
-      </Accordion>
+      <div id='tableTaskButtons'>
+        <TaskButton
+          onClick={() => handleDeleteTask(task.taskName, column.columnName)}
+          text='Delete'
+          idOverride='innerTaskButton' />
+        <TaskButton
+          onClick={(e) => handleInputChange(e)}
+          text='Edit'
+          idOverride='innerTaskButton'
+        />
+        <TaskButton
+          onClick={(e) => handleInputCommentChange(e)}
+          imgSrc='../assets/messages.svg'
+          alt='comment'
+          idOverride='innerTaskButton'
+        />
+        <TaskButton
+          onClick={() => { setIsMoveOpen(!isMoveOpen); }}
+          text='Move'
+          idOverride='innerTaskButton'
+        />
+        {isOpen ? <TextModal
+          placeholder={'Task Name'}
+          setterFunction={setIncomingData}
+          saveFunc={(e) => handleEditClick(e)}
+          setIsOpen={setIsOpen}
+          title='Edit Task'
+        /> : null}
+        {isMoveOpen ? <ColumnViewModal
+          setIsOpen={setIsMoveOpen}
+          title='Select Column to Move to'
+          saveFunc={handleMoveTask}
+          currentProject={currentProject}
+        /> : null}
+        {isCommentOpen ? <TextModal
+          placeholder={'Task Comment'}
+          setterFunction={setComment}
+          saveFunc={(e) => handleAddComment(e)}
+          setIsOpen={setIsCommentOpen}
+          title='Add Comment'
+        /> : null}
+        {isCommentEdit ? <TextModal
+          placeholder={'Edit Comment'}
+          setterFunction={setComment}
+          saveFunc={(e) => handleEditComment(e)}
+          setIsOpen={setIsCommentEdit}
+          title='Edit Comment'
+        /> : null}
+      </div>
+      {/* </Accordion> */}
     </div>
 
   );

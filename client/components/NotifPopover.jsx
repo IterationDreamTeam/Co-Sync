@@ -33,8 +33,8 @@ const NotifPopover = () => {
   }
 
   return (
-    <Box>
-      <Popover>
+    <Box size={'sm'}>
+      <Popover p={0}>
         <PopoverTrigger>
           <BellIcon className='bellIcon'   color='white'/>
         </PopoverTrigger>
@@ -57,9 +57,9 @@ const NotifPopover = () => {
                 <Tab>All</Tab>
               </TabList>
       
-              <TabPanels>
-                <TabPanel>
-                  <VStack>
+              <TabPanels p={0}>
+                <TabPanel p={0}>
+                  <VStack p={0}>
                     {notifs?.unread ? notifs.unread.map((notif) => (
                       <Notification id={notif.id}  key={notif._id} notification={notif} {...notif} NotifOnClick={handleNotifOnClick}></Notification>
                     )): null}

@@ -250,7 +250,7 @@ const updateTask = async (req, res, next) => {
     // each new comment adds new property to taskComments object
     let num = Object.keys(task.taskComments).length
 
-    // task.taskComments[num] = req.body.taskComments;
+    task.taskComments[num] = req.body.taskComments;
     await project.save();
 
     res.locals.task = task;
