@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import {SettingsIcon} from '@chakra-ui/icons';
+import { SettingsIcon } from '@chakra-ui/icons';
 import { Box, StackDivider, Button, Flex, Popover, PopoverCloseButton, PopoverBody, PopoverContent, PopoverArrow, PopoverHeader, Text, PopoverTrigger, VStack } from '@chakra-ui/react';
 import { Link, useNavigate } from 'react-router-dom';
 import Notification from './Notification.jsx';
@@ -27,7 +27,7 @@ const ProfilePopover = () => {
   }
   return (
     <Box
-    display='inline-block'
+      display='inline-block'
     >
       <Popover>
         <PopoverTrigger>
@@ -35,9 +35,9 @@ const ProfilePopover = () => {
         </PopoverTrigger>
         <PopoverContent>
           <PopoverArrow />
-          <PopoverHeader>
-            <Flex>
-              <Box>
+          <PopoverHeader className="linkBox">
+            <Flex >
+              <Box className="accountBox">
                 <Text as='b'>Account</Text>
               </Box>
             </Flex>
@@ -47,13 +47,13 @@ const ProfilePopover = () => {
             divider={<StackDivider bg='gray.600' m={'0 !important'} />}
             align='stretch'
           >
-            <Box>
+            <Box className="linkBox">
               <Link to='/profile'>Profile</Link>
             </Box>
-            <Box>
-              <Link to='/settings'>Settings</Link> 
+            <Box className="linkBox">
+              <Link to='/settings'>Settings</Link>
             </Box>
-            <Box>
+            <Box className="linkBox">
               <button className='routerLink' onClick={handleLogout} type='button' >Logout</button>
             </Box>
           </VStack>

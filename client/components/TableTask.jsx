@@ -37,10 +37,10 @@ const TableTask = ({ task, column, currentProject, index }) => {
   const [isCommentOpen, setIsCommentOpen] = useState(false);
   const [isCommentEdit, setIsCommentEdit] = useState(false);
   const [isMoveOpen, setIsMoveOpen] = useState(false);
-  const [isPriorityOpen,setIsPriorityOpen] = useState(false);
+  const [isPriorityOpen, setIsPriorityOpen] = useState(false);
   const [commentID, setCommentID] = useState('')
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [selectedOption,setSelectedOption] = useState('');
+  const [selectedOption, setSelectedOption] = useState('');
 
   const [isDetailsOpen, setIsDetailsOpen] = useState(false); // !LK
   const [deadlineDate, setDeadlineDate] = useState(task.deadlineDate); // !LK
@@ -85,7 +85,7 @@ const TableTask = ({ task, column, currentProject, index }) => {
 
   const handleEditClick = async (e) => {
     console.log('<<<<<')
-    console.log('The current project is', currentProject); 
+    console.log('The current project is', currentProject);
     e.preventDefault();
     const body = {
       projectId: currentProject._id,
@@ -262,7 +262,7 @@ const TableTask = ({ task, column, currentProject, index }) => {
       setIsPriorityOpen(false);
     } catch (error) {
       console.log(error);
-};
+    };
 
   }
 
@@ -282,13 +282,13 @@ const TableTask = ({ task, column, currentProject, index }) => {
         <AccordionItem>
           <AccordionButton>
             <p className='taskText'>{task.taskName}</p>
-            
+
             <AccordionIcon />
             <p className='taskPriority'>{task.taskPriority}</p>
           </AccordionButton>
           <AccordionPanel pb={4}>
 
-            {Object.entries(task.taskComments).filter((value) => !"").map( ([key, value], i) => {
+            {Object.entries(task.taskComments).filter((value) => !"").map(([key, value], i) => {
               let number = parseInt(key) + 1
               return (
                 <div key={i} className="commentBox">
@@ -320,27 +320,18 @@ const TableTask = ({ task, column, currentProject, index }) => {
             alt='comment'
             idOverride='innerTaskButton'
           />
+
           <TaskButton
-            onClick={() => { setIsMoveOpen(!isMoveOpen); }}
-            text='Move'
-            idOverride='innerTaskButton'
-          />
-           <TaskButton
             onClick={() => { setIsPriorityOpen(!isPriorityOpen); }}
             text='Priority'
             idOverride='innerTaskButton'
-          />         
+          />
           <TaskButton
-            onClick={() => { handleDetailsButtonClick()}}
+            onClick={() => { handleDetailsButtonClick() }}
             text='Details'
             idOverride='innerTaskButton'
           />
-          {/* <TaskButton
-            onClick={handleDeadlineButtonClick}
-            text='Set Deadline'
-            idOverride='innerTaskButton'
-          /> */}
-          
+
           {isOpen ? <TextModal
             placeholder={'Task Name'}
             setterFunction={setIncomingData}
@@ -362,14 +353,14 @@ const TableTask = ({ task, column, currentProject, index }) => {
             title='Add Comment'
           /> : null}
           {isPriorityOpen ? <EditTaskViewModal
-          placeholder={'Edit Priority'}
-          setterFunction={setPriority}
-          saveFunc={handlePriorityChange}
-          setIsPriorityOpen={setIsPriorityOpen}
-          currentProject={currentProject}
-          priority={priority}
-          title='Edit Priortiy'
-        /> : null}
+            placeholder={'Edit Priority'}
+            setterFunction={setPriority}
+            saveFunc={handlePriorityChange}
+            setIsPriorityOpen={setIsPriorityOpen}
+            currentProject={currentProject}
+            priority={priority}
+            title='Edit Priortiy'
+          /> : null}
           {isCommentEdit ? <TextModal
             placeholder={'Edit Comment'}
             setterFunction={setComment}
@@ -379,34 +370,34 @@ const TableTask = ({ task, column, currentProject, index }) => {
           /> : null}
         </div>
         {isDeadlineModalOpen && (
-            <DeadlineInputModal
-                onSave={(newDeadline) => {
-                handleSaveDeadline(newDeadline);
-                handleCloseDeadlineModal();
-                }}
-                onCancel={handleCloseDeadlineModal}
-                initialDeadline={deadlineDate}
-            />
+          <DeadlineInputModal
+            onSave={(newDeadline) => {
+              handleSaveDeadline(newDeadline);
+              handleCloseDeadlineModal();
+            }}
+            onCancel={handleCloseDeadlineModal}
+            initialDeadline={deadlineDate}
+          />
         )}
-      </Accordion> 
-        <Collapse in={isDetailsOpen}>
-            <Box
-              p={2}
-              mt={2}
-              borderWidth="1px"
-              borderRadius="md"
-              boxShadow="md"
-              backgroundColor="#152330"
-            > 
-              <Text>Created: {originalDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZoneName: 'short' })}</Text>
-              {deadlineDate ?<Text>Deadline: { new Date(deadlineDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZoneName: 'short' })}</Text>:null}
-              <TaskButton
+      </Accordion>
+      <Collapse in={isDetailsOpen}>
+        <Box
+          p={2}
+          mt={2}
+          borderWidth="1px"
+          borderRadius="md"
+          boxShadow="md"
+          backgroundColor="#152330"
+        >
+          <Text>Created: {originalDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZoneName: 'short' })}</Text>
+          {deadlineDate ? <Text>Deadline: {new Date(deadlineDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZoneName: 'short' })}</Text> : null}
+          <TaskButton
             onClick={handleDeadlineButtonClick}
             text='Set Deadline'
             idOverride='innerTaskButton'
           />
-              </Box>
-          </Collapse>
+        </Box>
+      </Collapse>
     </div>
 
   );

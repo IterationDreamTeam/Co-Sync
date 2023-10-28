@@ -27,13 +27,14 @@ import ProfilePopover from './ProfilePopover.jsx';
 const NavBar = () => {
   const isAuth = localStorage.getItem('isAuth');
   const { data: notifications, isError: isNotificationsError, isLoading: isNotificationsLoading, isSuccess: isNotificationsSuccess, error: notificationsError } = useGetNotificationsQuery({ skip: !isAuth });
-  
+
   return (
     <nav className='NavBar'>
-      <h1><a href='https://github.com/Co-Sync/Co-Sync'>Co-Sync</a></h1>
+      {/* <h1><a href='https://github.com/Co-Sync/Co-Sync'>Co-Sync</a></h1> */}
+      <h1><Link className='routerLink' to='/'>Co-Sync</Link></h1>
       <ul>
         <li>
-          <Link className='routerLink' to='/'>Home</Link>
+          {/* <Link className='routerLink' to='/'>Home</Link> */}
           {/* <Link className='routerLink' to='/profile'>Profile</Link> */}
         </li>
       </ul>

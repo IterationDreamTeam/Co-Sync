@@ -7,19 +7,18 @@ const TableHeader = ({ projectName, _id:projectId }) => {
   
 
   return (
-    <>  
-      <p>Project: {projectName}</p>
-      {/* <p>{projectId}</p> */}
+    <>
+      <h1>{projectName}</h1>
       {/* <ol>
         {
-          data && data.map(({status, userId : {username }}, index) => {
+          data && data.map(({ status, userId: { username } }, index) => {
             console.log(username, status);
             return <li key={index}>{username}</li>
           })
         }
-      </ol> */}
+      </ol>  */}
     </>
   )
-}; 
+};
 
 export default TableHeader; 
