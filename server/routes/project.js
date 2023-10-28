@@ -67,11 +67,24 @@ projectRouter.post('/task',
 //   - taskName
 //   - taskComments
 // returns a json object of the created task.
+
 projectRouter.patch('/task',
-  // sessionController.isLoggedIn,
   projectController.updateTask,
   (req, res) => res.status(200).json(res.locals.task)
 );
+
+projectRouter.patch('/task/editcomment',
+  projectController.editComment,
+  (req, res) => res.status(200).json(res.locals.task)
+);
+
+projectRouter.patch('/task/deletecomment',
+  projectController.deleteComment,
+  (req, res) => res.status(200).json(res.locals.task)
+);
+
+
+
 
 // delete a project
 // req.params.projectId: the projectId to delete;
@@ -106,7 +119,7 @@ projectRouter.delete('/column/:projectId/:columnId',
 //   - taskId
 // returns a 200 status with a success message.
 projectRouter.delete('/task/:projectId/:columnId/:taskId',
-// sessionController.isLoggedIn,
+  // sessionController.isLoggedIn,
   projectController.deleteTask,
   (req, res) => {
     res.statusMessage = 'Task deleted';

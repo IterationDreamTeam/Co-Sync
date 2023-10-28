@@ -5,9 +5,11 @@ const Notification = require('../models/notificationModel');
 // get all projects
 const getProjects = async (req, res, next) => {
   try {
+    console.log('getProjects')
     const tasks = await Project.find();
+    console.log('Tasks', tasks)
     res.locals.projects = tasks;
-    // res.status(200).json(res.locals.projects);
+
     return next();
   } catch (error) {
     console.log(error);
@@ -180,13 +182,12 @@ const createTask = async (req, res, next) => {
     }
     const newTask = {
       taskName: req.body.taskName,
-      taskComments: ''
+      taskComments: []
     };
     column.tasks.push(newTask);
     const updatedProject = await project.save();
 
     res.locals.task = updatedProject.columns[columnIndex].tasks[updatedProject.columns[columnIndex].tasks.length - 1];
-    // res.locals.project = project;
     return next();
   } catch (error) {
     console.log(error);
@@ -213,9 +214,7 @@ const updateTask = async (req, res, next) => {
         message: { err: 'project does not exist.' },
       });
     }
-    // console.log("Got Project: ", project);
-    // console.log("To find column: ", req.body.columnId);
-    // find the column;
+
     let column;
     for (let i = 0; i < project.columns.length; i++) {
       if (project.columns[i]._id.toString() === req.body.columnId) {
@@ -230,9 +229,7 @@ const updateTask = async (req, res, next) => {
         message: { err: 'column does not exist.' },
       });
     }
-    // console.log("Got Column: ", column);
-    // console.log("To find and update task: ", req.body.taskId);
-    // find the task, and update properties;
+
     let task;
     for (let i = 0; i < column.tasks.length; i++) {
       if (column.tasks[i]._id.toString() === req.body.taskId) {
@@ -247,29 +244,116 @@ const updateTask = async (req, res, next) => {
         message: { err: 'task does not exist.' },
       });
     }
-
-    // if update is for name or if update is for comment
-    console.log('The task', task)
+    console.log('Task.taskName', task.taskName)
     task.taskName = req.body.taskName;
+
     // each new comment adds new property to taskComments object
     let num = Object.keys(task.taskComments).length
-    task.taskComments[num] = req.body.taskComments;
 
-    console.log(task.taskComments)
+    // task.taskComments[num] = req.body.taskComments;
     await project.save();
 
     res.locals.task = task;
+    console.log(task)
     // res.locals.project = project;
     return next();
   } catch (error) {
     console.log(error);
     next({
-      log: 'Failed to udoate a task: ' + error,
-      message: { err: 'Failed to update a task' },
+      log: 'Failed to update a task: ' + error,
+      message: { err: 'Failed to updated a task' },
     })
   }
 };
 
+const editComment = async (req, res, next) => {
+  console.log("Begin Edit Comment script")
+  console.log(req.body)
+
+  try {
+    const project = await Project.findOne({
+      _id: req.body.projectId
+    });
+
+    let column;
+    for (let i = 0; i < project.columns.length; i++) {
+      if (project.columns[i]._id.toString() === req.body.columnId) {
+        column = project.columns[i];
+        break;
+      }
+    }
+
+    let task;
+    for (let i = 0; i < column.tasks.length; i++) {
+      if (column.tasks[i]._id.toString() === req.body.taskId) {
+        task = column.tasks[i];
+        break;
+      }
+    }
+
+    task.taskName = req.body.taskName;
+    let index = req.body.taskCommentID
+    let comment = req.body.taskNewComment
+    // console.log(`Changing array element at index ${index} to ${comment}`)
+    task.taskComments[index] = comment
+
+    await project.save();
+
+    res.locals.task = task;
+    // console.log(task)
+    return next();
+
+  } catch (error) {
+    console.log(error);
+    next({
+      log: 'Failed to delete comment: ' + error,
+      message: { err: 'Failed to delete a comment' },
+    })
+  }
+};
+
+const deleteComment = async (req, res, next) => {
+  console.log(req.body)
+
+  try {
+    const project = await Project.findOne({
+      _id: req.body.projectId
+    });
+
+    let column;
+    for (let i = 0; i < project.columns.length; i++) {
+      if (project.columns[i]._id.toString() === req.body.columnId) {
+        column = project.columns[i];
+        break;
+      }
+    }
+
+    let task;
+    for (let i = 0; i < column.tasks.length; i++) {
+      if (column.tasks[i]._id.toString() === req.body.taskId) {
+        task = column.tasks[i];
+        break;
+      }
+    }
+
+    task.taskName = req.body.taskName;
+    let index = req.body.taskCommentID
+    task.taskComments.splice(index, 1)
+
+    await project.save();
+    console.log('made it this far')
+    res.locals.task = task;
+    console.log(task)
+    return next();
+
+  } catch (error) {
+    console.log(error);
+    next({
+      log: 'Failed to delete comment: ' + error,
+      message: { err: 'Failed to delete a comment' },
+    })
+  }
+};
 
 // Delete a project (this will delete all column and tasks within the project)
 const deleteProject = async (req, res, next) => {
@@ -409,6 +493,8 @@ module.exports = {
   changeColumn,
   createTask,
   updateTask,
+  editComment,
+  deleteComment,
   deleteProject,
   deleteColumn,
   deleteTask,
