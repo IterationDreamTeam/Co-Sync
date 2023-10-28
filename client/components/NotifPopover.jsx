@@ -36,7 +36,7 @@ const NotifPopover = () => {
     <Box>
       <Popover>
         <PopoverTrigger>
-          <BellIcon className='bellIcon'  />
+          <BellIcon className='bellIcon'   color='white'/>
         </PopoverTrigger>
         <PopoverContent>
           <PopoverArrow />

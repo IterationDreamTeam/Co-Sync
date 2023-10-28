@@ -29,7 +29,7 @@ const ProfilePopover = () => {
     >
       <Popover>
         <PopoverTrigger>
-          <SettingsIcon className='settingsIcon' />
+          <SettingsIcon className='settingsIcon'  color={'white'}/>
         </PopoverTrigger>
         <PopoverContent>
           <PopoverArrow />

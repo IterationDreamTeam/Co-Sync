@@ -8,6 +8,7 @@
   border: 1px solid white;
   border-radius: 10px;
   -webkit-animation:  none !important;
+  
 }
 
 .homeMain {
@@ -23,6 +24,7 @@
   overflow: auto;
   -webkit-animation:  none !important;
 }
+
 
 // the NavBar is the top bar with the logo and the buttons
 .NavBar {
@@ -125,6 +127,9 @@
 }
 
 #tableDisplayInner {
+  display:flex;
+  flex-direction: row;
+  flex-wrap: wrap;
   display: grid;
   grid-template-columns: repeat(10, 1fr);
   width: 100%;
@@ -135,11 +140,17 @@
 }
 
 #tableColumnMain {
-  box-shadow: 2px 2px 12px rgba(44, 210, 222, 0.545);
+  backdrop-filter: blur(10px);
+
+  color: white;
+  // box-shadow: 2px 2px 12px rgba(44, 210, 222, 0.545);
   min-height: 10vh;
   background-color: #68697318;
-  min-width: 19vw;
-  height: 40vh;
+  width: fit-content;
+  height: fit-content;
+  min-width: 15vw;
+  scroll-padding: 1px;
+  // height: 40vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -147,8 +158,9 @@
   z-index: 1;
   overflow-x: hidden;
   overflow-y: auto;
-  padding: 5px 0px;
-  resize: both;
+  padding: 5px 5px;
+  // resize: both;
+  border-radius: 5px;
   h1 {
     margin: 0px 5px;
     padding: 0;
@@ -158,29 +170,47 @@
   }
 }
 
+#Draggable {
+  width: 100%;
+  margin: 0;
+  padding: 0; 
+}
+
+
+
 #tableTaskMain {
+  display: grid;
+  grid-template-rows: auto;
+
+  background-color: $glass-blue;
+  // background-color: red;
+
+  max-width: 100%;
+  width: 100%;
+
+  //border
+  border: 1px solid rgba(255, 255, 255, 0.5);
   border-left: 0px transparent;
   border-right: 0px transparent;
   border-top: 2px solid rgba(255, 255, 255, 0.5);
   border-bottom: 2px solid rgba(255, 255, 255, 0.5);
-  display: grid;
+  border-radius: 5px;
+  margin: .15rem 0;
+  
   padding: 5px;
-  max-width: 100%;
-  background-color: $glass-blue;
-  width: 100%;
-  border-radius: 1px;
+
   overflow: visible;
   overflow-wrap: anywhere;
-  display: grid;
-  grid-template-rows: auto;
-  margin: .15rem 0;
+
   z-index: 1;
+
   .taskText {
     padding: 0;
     margin: 0.2rem;
-    text-decoration: underline;
+    // text-decoration: underline;
     font-size: 1.2rem;
     font-weight: 600;
+    overflow-wrap: break-word;
   }
   #messagesButton {
     position: relative;
@@ -233,6 +263,7 @@ border-radius: 1rem;
 
 .TaskButton {
   display: inline-block;
+  background-color: transparent;
   button {
     white-space: nowrap;
   }
@@ -251,6 +282,7 @@ border-radius: 1rem;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  border-bottom:  1px solid white;
   margin-bottom: 5px;
   width: 100%;
   h2 {
@@ -285,10 +317,13 @@ border-radius: 1rem;
 
 #tableTaskButtons {
   display: flex;
+  gap: 2px;
+  justify-content: flex-end;
+  background: transparent;
 }
 
 #innerTaskButton {
-  background-color: #38495a;
+  // background-color: #38495a;
   border: 1px solid transparent;
   position: relative;
   border-radius: 5px;
@@ -313,4 +348,9 @@ border-radius: 1rem;
 
 h6 {
   margin: 6px;
+}
+
+.faUserPlus {
+  color:  white;
+  background-color: transparent
 }

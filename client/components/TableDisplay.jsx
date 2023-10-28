@@ -6,9 +6,12 @@ import { useSelector } from 'react-redux';
 import { useMoveTaskMutation} from '../utils/userApi.js';
 
 // Drag and Drop
-import { DndContext, DragOverlay,  useSensor, useSensors} from '@dnd-kit/core';
+import { DndContext, DragOverlay, TouchSensor, useSensor, useSensors} from '@dnd-kit/core';
 import MyPointerSensor from '../utils/PointerSensor.js';
 import Droppable from './Droppable.jsx';
+
+// Draggable ScrollBar 
+import Bar from './ModifiedScrollBar.jsx';
 
 /*
   This component renders the ScrollBar and TableColumn components.
@@ -18,7 +21,13 @@ const TableDisplay = () => {
   // Drag and Drop hooks
   const [activeId, setActiveId] = useState(null);
   const pointerSensor = useSensor(MyPointerSensor);
-  const sensors = useSensors(pointerSensor);
+  const touchSensor = useSensor(TouchSensor, {
+    activationConstraint: {
+      delay: 10000,
+      tolerence: 5,
+    }
+  }); 
+  const sensors = useSensors(pointerSensor, touchSensor);
 
   // Redux hooks
   const [moveTask] =useMoveTaskMutation(); 
@@ -28,7 +37,8 @@ const TableDisplay = () => {
     return (
       <>
         <div id='tableDisplayOuter' className='container'>
-          <ScrollBar currentProject={currentProject} />
+        <ScrollBar currentProject={currentProject} />
+          <Bar currentProject={currentProject} />
           <h1>Please Select A Project</h1>
         </div>
       </>
@@ -37,6 +47,7 @@ const TableDisplay = () => {
   return (
     <div id='tableDisplayOuter' className='container'>
       <ScrollBar currentProject={currentProject} />
+      {/* <Bar/> */}
       <TableHeader {...currentProject} />
       <DndContext onDragStart={handleDragStart}  onDragEnd={handleDragEnd} sensors={sensors}>
 
@@ -62,6 +73,7 @@ const TableDisplay = () => {
         </DragOverlay>
 
       </DndContext>
+      <p>I am  a test</p>
     </div>
   );
 

@@ -149,6 +149,8 @@ const createTask = async (req, res, next) => {
   // find the project with project id -- findOne
 
   try {
+    console.log('The reqest body', req.body)
+
     const project = await Project.findOne({
       _id: req.body.projectId
     });
@@ -200,6 +202,7 @@ const updateTask = async (req, res, next) => {
   // will need projectId, columnId and taskId in the request body;
   // will also need updatedTask object in the request body;
   try {
+  console.log('updateTask')
     const project = await Project.findOne({
       _id: req.body.projectId
     });
@@ -244,9 +247,10 @@ const updateTask = async (req, res, next) => {
         message: { err: 'task does not exist.' },
       });
     }
-    task.taskName = req.body.taskName;
 
-    console.log(task.taskComments)
+    // if update is for name or if update is for comment
+    console.log('The task', task)
+    task.taskName = req.body.taskName;
     // each new comment adds new property to taskComments object
     let num = Object.keys(task.taskComments).length
     task.taskComments[num] = req.body.taskComments;
@@ -261,7 +265,7 @@ const updateTask = async (req, res, next) => {
     console.log(error);
     next({
       log: 'Failed to udoate a task: ' + error,
-      message: { err: 'Failed to updated a task' },
+      message: { err: 'Failed to update a task' },
     })
   }
 };

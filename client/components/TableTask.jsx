@@ -13,6 +13,11 @@ import {
   AccordionIcon,
 } from '@chakra-ui/react'
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
+import { faCommenting } from '@fortawesome/free-solid-svg-icons';
+
 /*
   This component renders the individual tasks in the table columns.
   It also renders the TaskButton, TextModal, and ColumnViewModal components.
@@ -52,8 +57,7 @@ const TableTask = ({ task, column, currentProject, index }) => {
       taskComments: task.taskComments,
     };
     try {
-      const res = await updateTaskMutation(body);
-      if (res.error) throw new Error(res.error.message);
+      const res = await updateTaskMutation(body).unwrap()
       // Update state in redux store.
       dispatch(updateTask({ updatedTask: res.data, columnId: column._id }));
       // Update isOpen state to close the "edit task" window.
@@ -140,9 +144,9 @@ const TableTask = ({ task, column, currentProject, index }) => {
   return (
 
     <div style={{ zIndex: -index }} className="container" id="tableTaskMain">{ /* zIndex is used to make sure the task buttons are always on top of the task and the tasks below in the list */}
-      <Accordion allowToggle>
-        <AccordionItem>
-          <AccordionButton>
+      <Accordion allowToggle display='flex'>
+        <AccordionItem border='none'> 
+          <AccordionButton >
             <p className='taskText'>{task.taskName}</p>
             <AccordionIcon />
           </AccordionButton>
@@ -165,50 +169,58 @@ const TableTask = ({ task, column, currentProject, index }) => {
               </>}
           </AccordionPanel>
         </AccordionItem>
-
-        <div id='tableTaskButtons'>
-          <TaskButton
-            onClick={() => handleDeleteTask(task.taskName, column.columnName)}
-            text='Delete'
-            idOverride='innerTaskButton' />
-          <TaskButton
-            onClick={(e) => handleInputChange(e)}
-            text='Edit'
-            idOverride='innerTaskButton'
-          />
-          <TaskButton
-            onClick={(e) => handleInputCommentChange(e)}
-            imgSrc='../assets/messages.svg'
-            alt='comment'
-            idOverride='innerTaskButton'
-          />
-          <TaskButton
-            onClick={() => { setIsMoveOpen(!isMoveOpen); }}
-            text='Move'
-            idOverride='innerTaskButton'
-          />
-          {isOpen ? <TextModal
-            placeholder={'Task Name'}
-            setterFunction={setIncomingData}
-            saveFunc={(e) => handleEditClick(e)}
-            setIsOpen={setIsOpen}
-            title='Edit Task'
-          /> : null}
-          {isMoveOpen ? <ColumnViewModal
-            setIsOpen={setIsMoveOpen}
-            title='Select Column to Move to'
-            saveFunc={handleMoveTask}
-            currentProject={currentProject}
-          /> : null}
-          {isCommentOpen ? <TextModal
-            placeholder={'Task Comment'}
-            setterFunction={setComment}
-            saveFunc={(e) => handleAddComment(e)}
-            setIsOpen={setIsCommentOpen}
-            title='Add Comment'
-          /> : null}
-        </div>
       </Accordion>
+
+
+      <div id='tableTaskButtons'>
+        <TaskButton
+          onClick={(e) => handleInputChange(e)}
+          // text='Edit'
+          idOverride='innerTaskButton'
+        >
+          <FontAwesomeIcon icon={faPenToSquare} />
+        </TaskButton>
+        <TaskButton
+          onClick={(e) => handleInputCommentChange(e)}
+          // imgSrc='../assets/messages.svg'
+          alt='comment'
+          idOverride='innerTaskButton'
+        >
+          <FontAwesomeIcon icon={faCommenting} />
+        </TaskButton>
+        <TaskButton
+          onClick={() => handleDeleteTask(task.taskName, column.columnName)}
+          text='Delete'
+          idOverride='innerTaskButton'
+        >
+          <FontAwesomeIcon icon={faTrash} />
+        </TaskButton>
+        {/* <TaskButton
+          onClick={() => { setIsMoveOpen(!isMoveOpen); }}
+          text='Move'
+          idOverride='innerTaskButton'
+        /> */}
+        {isOpen ? <TextModal
+          placeholder={'Task Name'}
+          setterFunction={setIncomingData}
+          saveFunc={(e) => handleEditClick(e)}
+          setIsOpen={setIsOpen}
+          title='Edit Task'
+        /> : null}
+        {isMoveOpen ? <ColumnViewModal
+          setIsOpen={setIsMoveOpen}
+          title='Select Column to Move to'
+          saveFunc={handleMoveTask}
+          currentProject={currentProject}
+        /> : null}
+        {isCommentOpen ? <TextModal
+          placeholder={'Task Comment'}
+          setterFunction={setComment}
+          saveFunc={(e) => handleAddComment(e)}
+          setIsOpen={setIsCommentOpen}
+          title='Add Comment'
+        /> : null}
+      </div>
     </div>
 
   );

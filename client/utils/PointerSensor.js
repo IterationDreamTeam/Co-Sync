@@ -24,8 +24,7 @@ export default class MyPointerSensor extends PointerSensor {
 }
 
 function isInteractiveElement(element) {
-  const elementTagsAndClasses = [element.tagName]
-  console.log(elementTagsAndClasses)
+  console.log('Element', element.tagName); 
   
   const interactiveElements = [
     'button',
@@ -33,7 +32,9 @@ function isInteractiveElement(element) {
     'textarea',
     'select',
     'option',
-    'img'
+    'img',
+    'svg',
+    'path'
   ];
 
   const notDraggableByClass = [
@@ -65,3 +66,4 @@ function isInteractiveElement(element) {
 
   return false;
 }
+

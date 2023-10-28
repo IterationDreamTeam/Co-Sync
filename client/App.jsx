@@ -80,7 +80,7 @@ const App = () => {
         <Button onClick={toggleColorMode}
           position='absolute'
           bottom={1}
-          left={1}
+          right={1}
         >
           {colorMode === 'light' ? <MoonIcon /> : <SunIcon/>}
         </Button>
