@@ -113,6 +113,7 @@ const TableTask = ({ task, column, currentProject, index }) => {
 */
 
   const handleAddComment = async (e) => {
+    console.log('addComment start')
     e.preventDefault();
     const body = {
       projectId: currentProject._id,
@@ -331,7 +332,6 @@ const TableTask = ({ task, column, currentProject, index }) => {
             text='Details'
             idOverride='innerTaskButton'
           />
-
           {isOpen ? <TextModal
             placeholder={'Task Name'}
             setterFunction={setIncomingData}
@@ -360,6 +360,13 @@ const TableTask = ({ task, column, currentProject, index }) => {
             currentProject={currentProject}
             priority={priority}
             title='Edit Priortiy'
+          /> : null}
+          {isCommentOpen ? <TextModal
+            placeholder={'Task Comment'}
+            setterFunction={setComment}
+            saveFunc={(e) => handleAddComment(e)}
+            setIsOpen={setIsCommentOpen}
+            title='Add Comment'
           /> : null}
           {isCommentEdit ? <TextModal
             placeholder={'Edit Comment'}

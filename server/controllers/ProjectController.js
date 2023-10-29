@@ -126,7 +126,7 @@ const changeColumn = async (req, res, next) => {
 
     for (let i = 0; i < project.columns.length; i++) {
       if (project.columns[i]._id.toString() === newColumnId) {
-        const newTask = { taskName: task.taskName, taskStatus: task.taskStatus, taskPriority: task.taskPriority,taskComments: task.taskComments, _id: task._id };
+        const newTask = { taskName: task.taskName, taskStatus: task.taskStatus, taskPriority: task.taskPriority, taskComments: task.taskComments, _id: task._id };
         project.columns[i].tasks.push(newTask);
         // newColumn = project.columns[i];
         break;
@@ -245,14 +245,16 @@ const updateTask = async (req, res, next) => {
         message: { err: 'task does not exist.' },
       });
     }
-    
+
     task.taskPriority = req.body.taskPriority;
 
     task.taskName = req.body.taskName;
+    let num = Object.keys(task.taskComments).length
 
-  await project.save();
-  res.locals.task = task;
-  console.log(task)
+    task.taskComments[num] = req.body.taskComments;
+    await project.save();
+    res.locals.task = task;
+    console.log(task)
 
     return next();
   } catch (error) {
@@ -266,7 +268,7 @@ const updateTask = async (req, res, next) => {
 
 
 const updateTaskPriority = async (req, res, next) => {
-console.log('MADE IT HERE!!!!!!!!!!!!!!')
+  console.log('MADE IT HERE!!!!!!!!!!!!!!')
   try {
     const project = await Project.findOne({
       _id: req.body.projectId
@@ -312,10 +314,10 @@ console.log('MADE IT HERE!!!!!!!!!!!!!!')
         message: { err: 'task does not exist.' },
       });
     }
-    
-      task.taskPriority = req.body.taskPriority;
 
-      task.taskName = req.body.taskName;
+    task.taskPriority = req.body.taskPriority;
+
+    task.taskName = req.body.taskName;
 
     // each new comment adds new property to taskComments object
     let num = Object.keys(task.taskComments).length
