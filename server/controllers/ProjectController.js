@@ -246,7 +246,7 @@ const updateTask = async (req, res, next) => {
       });
     }
 
-    task.taskPriority = req.body.taskPriority;
+    task.taskPriority = (req.body.taskPriority ? req.body.taskPriority : task.taskPriority);
 
     task.taskName = req.body.taskName;
     let num = Object.keys(task.taskComments).length
